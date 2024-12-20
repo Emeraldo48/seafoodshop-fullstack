@@ -1,0 +1,12 @@
+type Query {
+    getProducts: ProductResponse
+    getCategories: [Category]
+    getProductsInCategory(id: ID): [Product]
+}
+
+type Mutation {
+    createProduct(input: ProductInput): Product
+    removeProduct(id: ID): Product
+    createCategory(name: String): Category
+    removeCategory(id: ID): Category
+}

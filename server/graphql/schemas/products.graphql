@@ -1,0 +1,31 @@
+type Product {
+    id: ID
+    name: String
+    price: Int
+    weight: Int
+    description: String
+    discount: Int
+    isAvailable: Boolean
+    categoryId: Int
+    img: String
+}
+
+input ProductInput {
+    id: ID
+    name: String!
+    price: Int!
+    weight: Int
+    description: String!
+    discount: Int
+    isAvailable: Boolean
+    categoryId: Int!
+    img: String!
+}
+
+type ProductResponse {
+    count: Int
+    products: [Product]
+}
+
+
+
