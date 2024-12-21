@@ -7,7 +7,8 @@ export interface IListProduct {
     discount: number
     isAvailable: boolean
     categoryId: number
-    weight: Number
+    weight: number
+    slug: string
 }
 
 export interface IProduct extends IListProduct {

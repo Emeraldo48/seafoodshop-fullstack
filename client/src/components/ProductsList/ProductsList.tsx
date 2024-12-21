@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import styled from "styled-components";
 import {useQuery} from "@apollo/client";
 import {GET_ALL_CATEGORIES} from "../../graphql/query/category";
@@ -13,25 +13,10 @@ import ProductModal from "../Modal/ProductModal";
 import {addProductToCart} from "../../store/reducers/ActionCreators";
 import {notificationSlice} from "../../store/reducers/notificationSlice";
 import {NotificationType} from "../../types/INotification";
+import ProductsSection from "../ProductsSection/ProductsSection";
 
 const Wrapper = styled.main`
     
-`
-
-const ProductsSection = styled.section`
-    margin-bottom: 30px;
-    scroll-margin-top: 80px;
-`
-
-const ProductsTitle = styled.h2`
-    font-size: var(--font-size-bg);
-    margin: 30px 0 10px;
-`
-
-const ProductsWrapper = styled.div`
-    display: grid;
-    grid-gap: 26px;
-    grid-template-columns: repeat(4, 1fr);
 `
 
 const ErrorWrapper = styled.div`
@@ -53,27 +38,32 @@ const ErrorWrapper = styled.div`
     }
 `
 
-interface ProductsCategory {
+export interface ProductsCategory {
     category: ICategory
     products: IProduct[]
 }
 const ProductsList = () => {
-
     const {isAuth, id} = useAppSelector(state => state.userReducer);
     const {products:cartProducts, error:cartError} = useAppSelector(state => state.cartReducer);
     const [products, setProducts] = useState<ProductsCategory[]>([]);
     const dispatch = useAppDispatch();
+    const parentRef = useRef(null);
+
 
     const {data, loading, error:categoriesError} = useQuery(GET_ALL_CATEGORIES);
     const {data:productData, loading:productLoading, error:productError} = useQuery(GET_ALL_PRODUCTS);
     const [loaded, setLoaded] = useState(false);
 
-    const handleProductClick = useCallback((product: IProduct) => {
+    const handleProductClick = useCallback((product: IProduct, category: ICategory) => {
 
         dispatch(modalSlice.actions.setModalWindow({
             Component: ProductModal,
-            data: {product}
-        }))
+            data: {
+                product,
+                onClose: () => window.history.pushState(null, "", `/${category.slug}`)
+            }
+        }));
+        window.history.pushState(null, "", `/${category.slug}/${product.slug}`);
     }, [dispatch]);
 
     const handleButtonClick = useCallback((e: React.MouseEvent<HTMLButtonElement, MouseEvent>, product: IProduct) => {
@@ -96,6 +86,7 @@ const ProductsList = () => {
             duration: 3000,
         }))
     }, [id, dispatch]);
+
     useEffect(() => {
         if(!loading && !productLoading && !categoriesError && !productError) {
             const prodObj: Record<number, ProductsCategory> = productData.getProducts.products.reduce((acc:Record<number, ProductsCategory>, value:IProduct) => {
@@ -112,7 +103,7 @@ const ProductsList = () => {
             setProducts(prodArr);
             setLoaded(true);
         } else {
-            setLoaded(false);
+                setLoaded(false);
         }
     }, [data, productData]);
 
@@ -127,23 +118,16 @@ const ProductsList = () => {
 
     return (
         <Container>
-            <Wrapper>
-                {loaded && products.map(productsCategory =>
-                    <ProductsSection key={productsCategory.category.name} data-anchor-id={productsCategory.category.name.replaceAll(" ", "-")}>
-                        <ProductsTitle>{productsCategory.category.name}</ProductsTitle>
-                        <ProductsWrapper>
-                            {productsCategory.products.map(product => {
-                                    return <ProductsItem
-                                        handleButtonClick={handleButtonClick}
-                                        handleProductClick={handleProductClick}
-                                        key={product.name}
-                                        card={product}
-                                        cartProduct={cartProducts.find(cartProduct => cartProduct.productId == product.id)}
-                                    />
-                                }
-                            )}
-                        </ProductsWrapper>
-                    </ProductsSection>
+            <Wrapper ref={parentRef}>
+                {loaded && products.map((productsCategory, key) =>
+                    <ProductsSection
+                        key={key}
+                        productsCategory={productsCategory}
+                        handleButtonClick={handleButtonClick}
+                        handleProductClick={handleProductClick}
+                        cartProducts={cartProducts}
+                        parentRef={parentRef}
+                    />
                 )}
             </Wrapper>
         </Container>

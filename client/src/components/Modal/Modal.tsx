@@ -7,8 +7,8 @@ import {
     showAnimation,
     showContentAnimation
 } from "../../utils/animations/modalAnimations";
-import {useAppDispatch} from "../../hooks/redux";
-import {modalSlice} from "../../store/reducers/modalSlice";
+import {useAppDispatch, useAppSelector} from "../../hooks/redux";
+import {modalSlice, ModalState} from "../../store/reducers/modalSlice";
 
 const Layout = styled.div<{
     $fading: boolean
@@ -75,6 +75,7 @@ const Modal: FC<ModalInterface> = ({children}) => {
     const [fading, setFading] = useState(false);
     const dispatch = useAppDispatch();
     const layoutRef = useRef<boolean>(false);
+    const {data}: ModalState = useAppSelector(state => state.modalReducer);
 
     useEffect(() => {
 
@@ -101,6 +102,7 @@ const Modal: FC<ModalInterface> = ({children}) => {
         setTimeout(() => {
             dispatch(modalSlice.actions.clearModalWindow());
             setFading(false);
+            if(data.onClose) data.onClose();
         }, 200);
     }
 

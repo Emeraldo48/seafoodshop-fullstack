@@ -6,6 +6,7 @@ import {GET_ALL_CATEGORIES} from "../../graphql/query/category";
 import {ICategory} from "../../types/Category";
 import {FilledButton} from "../Button/Button";
 import CartButton from "../CartButton/CartButton";
+import {useParams} from "react-router-dom";
 
 const Wrapper = styled.div`
     width: 100%;
@@ -69,12 +70,16 @@ const CategoryNavigation = () => {
     }, [data]);
 
     const handleNavigation = (categoryName: string) => {
-        const category = document.querySelector(`[data-anchor-id=${categoryName.replaceAll(" ", "-")}]`);
-        if(category)
+        const category = document.querySelector(`[data-anchor-id=${categoryName}]`);
+        if(category) {
             category.scrollIntoView({
                 behavior: "smooth",
                 block: "start"
-            })
+            });
+            window.history.pushState(null, "", `/${categoryName}`);
+
+        }
+
     }
 
     return (
@@ -84,7 +89,7 @@ const CategoryNavigation = () => {
                     <CategoriesHandler>
                         {categories.map(category =>
                             <CategoryItem
-                                onClick={e => handleNavigation(category.name)}
+                                onClick={e => handleNavigation(category.slug)}
                                 key={category.id}
                             >
                                 {category.name}

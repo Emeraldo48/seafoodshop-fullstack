@@ -1,6 +1,7 @@
 import React, {FC, useEffect, useRef, useState} from 'react';
 import styled from "styled-components";
 import Draggable, {DraggableData, DraggableEvent} from "react-draggable";
+import {SHOP_ROUTE} from "../../types/consts";
 
 const Wrapper = styled.div`
     width: 100%;
@@ -103,6 +104,7 @@ const Slider: FC<SliderProps> = ({children}) => {
     const [isActive, setIsActive] = useState(false);
     const intervalRef = useRef<null | NodeJS.Timer>(null);
     const imageLineRef = useRef<null | HTMLDivElement>(null);
+    const intersectedRef = useRef<boolean>(false);
 
     useEffect(() => {
         const handleResize = () => {
@@ -139,6 +141,27 @@ const Slider: FC<SliderProps> = ({children}) => {
     useEffect(() => {
         localStorage.setItem('offset', offset.toString());
     }, [offset]);
+
+    useEffect(() => {
+        const imageLine = imageLineRef.current as HTMLDivElement;
+        const observer = new IntersectionObserver(
+            (entries) => {
+                if(entries[0].isIntersecting) {
+                    console.log('intersected');
+                    if(!intersectedRef.current) {
+                        intersectedRef.current = true;
+                    } else {
+                        window.history.pushState(null, "", SHOP_ROUTE);
+                    }
+                }
+            },
+            {
+                threshold: 0.6
+            }
+        )
+        observer.observe(imageLine);
+        return () => observer.unobserve(imageLine);
+    }, [imageLineRef]);
 
     const handleLeftClick = () => {
         if(isMove) return;
@@ -208,7 +231,6 @@ const Slider: FC<SliderProps> = ({children}) => {
     const onDrag = (e: DraggableEvent, pos: DraggableData) => {
         const x = Math.abs(pos.x);
         setOffset(x);
-        console.log(offset);
     }
 
     return (
