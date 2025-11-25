@@ -63,33 +63,33 @@ const TrashCan = styled(FaTrashCan)`
 `
 
 interface CartProductsListItemProps {
-    cartProduct: ICartProduct
-    product: IProduct
-    setCount: (count: number) => void
-    handleDelete: () => void
+  cartProduct: ICartProduct
+  product: IProduct
+  setCount: (count: number) => void
+  handleDelete: () => void
 }
 
 const CartProductsListItem: FC<CartProductsListItemProps> = ({cartProduct, product, setCount, handleDelete}) => {
 
-    return (
-        <Wrapper>
-            <InfoBlock>
-                <Image src={process.env.REACT_APP_URL + product.img} alt={product.name} />
-                <NameWeightBlock>
-                    <Name>{product.name}</Name>
-                    <Weight>{String(product.weight)} г.</Weight>
-                </NameWeightBlock>
+  return (
+    <Wrapper>
+      <InfoBlock>
+        <Image src={process.env.REACT_APP_URL + product.img} alt={product.name}/>
+        <NameWeightBlock>
+          <Name>{product.name}</Name>
+          <Weight>{String(product.weight)} г.</Weight>
+        </NameWeightBlock>
 
-            </InfoBlock>
-            <CountCostBlock>
-                <Counter value={cartProduct.count} setValue={setCount} />
-                <Price>{product.price * cartProduct.count} ₽</Price>
-            </CountCostBlock>
-            <TrashCan
-                onClick={handleDelete}
-            />
-        </Wrapper>
-    );
+      </InfoBlock>
+      <CountCostBlock>
+        <Counter value={cartProduct.count} setValue={setCount}/>
+        <Price>{product.price * cartProduct.count} ₽</Price>
+      </CountCostBlock>
+      <TrashCan
+        onClick={handleDelete}
+      />
+    </Wrapper>
+  );
 };
 
 export default CartProductsListItem;

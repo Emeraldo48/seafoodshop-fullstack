@@ -4,13 +4,13 @@ import {FaTriangleExclamation} from "react-icons/fa6";
 import {NotificationText, NotificationWrapper} from "./Notification";
 
 const Wrapper = styled(NotificationWrapper)<{
-    $isFade?: boolean
+  $isFade?: boolean
 }>`
     background-color: #baba3e;
 `
 
 const Text = styled(NotificationText)`
-    
+
 `
 
 const WarningIcon = styled(FaTriangleExclamation)`
@@ -18,18 +18,18 @@ const WarningIcon = styled(FaTriangleExclamation)`
 `
 
 interface WarningNotificationProps {
-    text: string
-    isFade: boolean
-    count: number
+  text: string
+  isFade: boolean
+  count: number
 }
 
 const WarningNotification: FC<WarningNotificationProps> = ({text, isFade}) => {
-    return (
-        <Wrapper $isFade={isFade}>
-            <WarningIcon />
-            <Text>{text}</Text>
-        </Wrapper>
-    );
+  return (
+    <Wrapper $isFade={isFade}>
+      <WarningIcon/>
+      <Text>{text}</Text>
+    </Wrapper>
+  );
 };
 
 export default WarningNotification;

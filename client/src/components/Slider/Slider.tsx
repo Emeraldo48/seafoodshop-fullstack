@@ -12,7 +12,7 @@ const Wrapper = styled.div`
     align-items: center;
 `
 
-const ImageController = styled.div<{$width: number}>`
+const ImageController = styled.div<{ $width: number }>`
     display: flex;
     max-width: ${props => props.$width}px;
     height: 100%;
@@ -29,14 +29,14 @@ const ImageLine = styled.div<{ $offset: number, $isActive: boolean }>`
 `
 
 
-const ImageWrapper = styled.div<{$width: number, $isActive: boolean}>`
+const ImageWrapper = styled.div<{ $width: number, $isActive: boolean }>`
     width: ${props => props.$width}px;
     padding: 0 10px;
     height: 100%;
     position: relative;
 
     & img {
-        width: ${props => props.$width-20}px;
+        width: ${props => props.$width - 20}px;
         height: 100%;
         border-radius: 20px;
     }
@@ -53,7 +53,6 @@ const ImageWrapper = styled.div<{$width: number, $isActive: boolean}>`
     }
     
 `
-
 
 
 const ArrowButton = styled.button`
@@ -94,185 +93,186 @@ const ArrowButton = styled.button`
 `
 
 interface SliderProps {
-    children: React.ReactNode
+  children: React.ReactNode
 }
+
 const Slider: FC<SliderProps> = ({children}) => {
-    const [pageWidth, setPageWidth] = useState(1300);
-    const [images, setImages] = useState<React.ReactNode[]>([]);
-    const [offset, setOffset] = useState(pageWidth*2);
-    const [isMove, setIsMove] = useState(false);
-    const [isActive, setIsActive] = useState(false);
-    const intervalRef = useRef<null | NodeJS.Timer>(null);
-    const imageLineRef = useRef<null | HTMLDivElement>(null);
-    const intersectedRef = useRef<boolean>(false);
+  const [pageWidth, setPageWidth] = useState(1300);
+  const [images, setImages] = useState<React.ReactNode[]>([]);
+  const [offset, setOffset] = useState(pageWidth * 2);
+  const [isMove, setIsMove] = useState(false);
+  const [isActive, setIsActive] = useState(false);
+  const intervalRef = useRef<null | NodeJS.Timer>(null);
+  const imageLineRef = useRef<null | HTMLDivElement>(null);
+  const intersectedRef = useRef<boolean>(false);
 
-    useEffect(() => {
-        const handleResize = () => {
-            const width = window.innerWidth;
-            if(width < 1500 && pageWidth === 1300) {
-                setPageWidth(1000);
-                setOffset(2000);
-            } else if(width > 1500 && pageWidth === 1000) {
-                setPageWidth(1300);
-                setOffset(2600);
-            }
+  useEffect(() => {
+    const handleResize = () => {
+      const width = window.innerWidth;
+      if (width < 1500 && pageWidth === 1300) {
+        setPageWidth(1000);
+        setOffset(2000);
+      } else if (width > 1500 && pageWidth === 1000) {
+        setPageWidth(1300);
+        setOffset(2600);
+      }
+    }
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    }
+  }, [])
+
+
+  useEffect(() => {
+    let childrenArray = React.Children.toArray(children);
+    if (childrenArray.length < 6) {
+      let arrayLength = childrenArray.length;
+      for (let i = arrayLength; i < 6; i++) {
+        childrenArray = [...childrenArray, childrenArray[(i - arrayLength) % arrayLength]];
+      }
+    }
+    setImages(childrenArray.map((image, index) =>
+      image
+    ));
+  }, [pageWidth]);
+
+  useEffect(() => {
+    localStorage.setItem('offset', offset.toString());
+  }, [offset]);
+
+  useEffect(() => {
+    const imageLine = imageLineRef.current as HTMLDivElement;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          console.log('intersected');
+          if (!intersectedRef.current) {
+            intersectedRef.current = true;
+          } else {
+            window.history.pushState(null, "", SHOP_ROUTE);
+          }
         }
-        handleResize();
-        window.addEventListener('resize', handleResize);
-        return () => {
-            window.removeEventListener('resize', handleResize);
-        }
-    }, [])
+      },
+      {
+        threshold: 0.6
+      }
+    )
+    observer.observe(imageLine);
+    return () => observer.unobserve(imageLine);
+  }, [imageLineRef]);
 
+  const handleLeftClick = () => {
+    if (isMove) return;
+    setImages(prevState => [prevState[prevState.length - 1], ...prevState.slice(0, prevState.length - 1)]);
+    setOffset(prevState => pageWidth * 3 - (pageWidth * 2 - prevState));
+    //setOffset(pageWidth*3);
+    setIsMove(true);
+    restartInterval();
+    setTimeout(() => {
+      setIsActive(true);
+      setOffset(pageWidth * 2);
+      updateImages();
+    }, 50);
+  }
 
-    useEffect(() => {
-        let childrenArray = React.Children.toArray(children);
-        if(childrenArray.length < 6) {
-            let arrayLength = childrenArray.length;
-            for(let i = arrayLength; i < 6; i++) {
-                childrenArray = [...childrenArray, childrenArray[(i-arrayLength) % arrayLength]];
-            }
-        }
-        setImages(childrenArray.map((image, index) =>
-                image
-        ));
-    }, [pageWidth]);
+  const handleRightClick = () => {
+    if (isMove) return;
+    setImages(prevState => [...prevState.slice(1, prevState.length), prevState[0]]);
+    setOffset(prevState => prevState - pageWidth);
+    //setOffset(pageWidth);
+    setIsMove(true);
+    restartInterval();
+    setTimeout(() => {
+      setIsActive(true);
+      setOffset(pageWidth * 2);
+      updateImages();
+    }, 50);
+  }
+  const updateImages = () => {
+    setTimeout(() => {
+      setIsActive(false);
+      setIsMove(false);
+    }, 300);
+  }
 
-    useEffect(() => {
-        localStorage.setItem('offset', offset.toString());
-    }, [offset]);
-
-    useEffect(() => {
-        const imageLine = imageLineRef.current as HTMLDivElement;
-        const observer = new IntersectionObserver(
-            (entries) => {
-                if(entries[0].isIntersecting) {
-                    console.log('intersected');
-                    if(!intersectedRef.current) {
-                        intersectedRef.current = true;
-                    } else {
-                        window.history.pushState(null, "", SHOP_ROUTE);
-                    }
-                }
-            },
-            {
-                threshold: 0.6
-            }
-        )
-        observer.observe(imageLine);
-        return () => observer.unobserve(imageLine);
-    }, [imageLineRef]);
-
-    const handleLeftClick = () => {
-        if(isMove) return;
-        setImages(prevState => [prevState[prevState.length-1],...prevState.slice(0, prevState.length-1)]);
-        setOffset(prevState => pageWidth*3 - (pageWidth*2 - prevState));
-        //setOffset(pageWidth*3);
-        setIsMove(true);
-        restartInterval();
-        setTimeout(() => {
-            setIsActive(true);
-            setOffset(pageWidth*2);
-            updateImages();
-        }, 50);
+  useEffect(() => {
+    restartInterval();
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
     }
+  }, []);
+  const restartInterval = () => {
+    if (intervalRef.current) clearInterval(intervalRef.current);
+    intervalRef.current = setInterval(() => {
+      const currentOffset = Number(localStorage.getItem('offset')) || pageWidth * 2;
+      if (currentOffset === pageWidth * 2)
+        handleRightClick();
+    }, 5000);
+  }
 
-    const handleRightClick = () => {
-        if(isMove) return;
-        setImages(prevState => [...prevState.slice(1, prevState.length), prevState[0]]);
-        setOffset(prevState => prevState - pageWidth);
-        //setOffset(pageWidth);
-        setIsMove(true);
-        restartInterval();
-        setTimeout(() => {
-            setIsActive(true);
-            setOffset(pageWidth*2);
-            updateImages();
-        }, 50);
+  const onDragStart = (e: DraggableEvent, pos: DraggableData) => {
+    if (isMove) {
+      e.preventDefault();
+      return;
     }
-    const updateImages = () => {
-        setTimeout(() => {
-            setIsActive(false);
-            setIsMove(false);
-        }, 300);
+  }
+  const onDragStop = (e: DraggableEvent, pos: DraggableData) => {
+    if (offset < pageWidth * 1.8) {
+      handleLeftClick();
+    } else if (offset > pageWidth * 2.2) {
+      handleRightClick();
+    } else {
+      setOffset(pageWidth * 2);
     }
+  }
 
-    useEffect(() => {
-        restartInterval();
-        return () => {
-            if(intervalRef.current) clearInterval(intervalRef.current);
-        }
-    }, []);
-    const restartInterval = () => {
-        if(intervalRef.current) clearInterval(intervalRef.current);
-        intervalRef.current = setInterval(() => {
-            const currentOffset = Number(localStorage.getItem('offset')) || pageWidth * 2;
-            if(currentOffset === pageWidth*2)
-                handleRightClick();
-        }, 5000);
-    }
+  const onDrag = (e: DraggableEvent, pos: DraggableData) => {
+    const x = Math.abs(pos.x);
+    setOffset(x);
+  }
 
-    const onDragStart = (e: DraggableEvent, pos: DraggableData) => {
-        if(isMove) {
-            e.preventDefault();
-            return;
-        }
-    }
-    const onDragStop = (e: DraggableEvent, pos: DraggableData) => {
-        if(offset < pageWidth*1.8) {
-            handleLeftClick();
-        } else if(offset > pageWidth*2.2) {
-            handleRightClick();
-        } else {
-            setOffset(pageWidth*2);
-        }
-    }
+  return (
+    <Wrapper
+      ref={imageLineRef}
+    >
+      <ArrowButton data-text={"<"}
+                   onClick={handleLeftClick}
+      />
+      <ImageController
+        $width={pageWidth}
+      >
 
-    const onDrag = (e: DraggableEvent, pos: DraggableData) => {
-        const x = Math.abs(pos.x);
-        setOffset(x);
-    }
-
-    return (
-        <Wrapper
-            ref={imageLineRef}
+        <Draggable
+          axis="x"
+          position={{x: -(offset), y: 0}}
+          onDrag={(e, pos) => onDrag(e, pos)}
+          onStart={(e, pos) => onDragStart(e, pos)}
+          onStop={(e, pos) => onDragStop(e, pos)}
         >
-            <ArrowButton data-text={"<"}
-                         onClick={handleLeftClick}
-            />
-            <ImageController
+          <ImageLine
+            $offset={offset}
+            $isActive={isActive}
+          >
+            {images.map((image: React.ReactNode, index) =>
+              <ImageWrapper
                 $width={pageWidth}
-            >
+                $isActive={index === 2}
+                key={index}
+              >
+                {image}
+              </ImageWrapper>
+            )}
+          </ImageLine>
 
-                <Draggable
-                    axis="x"
-                    position={{x: -(offset), y: 0}}
-                    onDrag={(e, pos) => onDrag(e, pos)}
-                    onStart={(e, pos) => onDragStart(e, pos)}
-                    onStop={(e, pos) => onDragStop(e, pos)}
-                >
-                    <ImageLine
-                        $offset={offset}
-                        $isActive={isActive}
-                    >
-                        {images.map((image: React.ReactNode, index) =>
-                            <ImageWrapper
-                                $width={pageWidth}
-                                $isActive={index === 2}
-                                key={index}
-                            >
-                                {image}
-                            </ImageWrapper>
-                        )}
-                    </ImageLine>
-
-                </Draggable>
-            </ImageController>
-            <ArrowButton data-text={">"}
-                         onClick={handleRightClick}
-            />
-        </Wrapper>
-    );
+        </Draggable>
+      </ImageController>
+      <ArrowButton data-text={">"}
+                   onClick={handleRightClick}
+      />
+    </Wrapper>
+  );
 };
 
 export default Slider;

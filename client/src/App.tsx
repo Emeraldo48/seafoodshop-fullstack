@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {useAppDispatch, useAppSelector} from "./hooks/redux";
+import {useAppDispatch} from "./hooks/redux";
 import Header from "./components/Header/Header";
 import ModalController from "./components/Modal/ModalController";
 import {check} from "./store/reducers/ActionCreators";
@@ -25,38 +25,39 @@ const AppWrapper = styled.div`
 `
 
 function App() {
-    const dispatch = useAppDispatch();
-    const {data:categoriesData, loading} = useQuery(GET_ALL_CATEGORIES);
-    const [categories, setCategories] = useState<ICategory[]>([]);
-    useEffect(() => {
-        if(getCookie('token')) dispatch(check())
-    }, []);
+  const dispatch = useAppDispatch();
+  const {data: categoriesData, loading} = useQuery(GET_ALL_CATEGORIES);
+  const [categories, setCategories] = useState<ICategory[]>([]);
+  useEffect(() => {
+    if (getCookie('token')) dispatch(check())
+  }, []);
 
-    useEffect(() => {
-        if(!loading) {
-            setCategories(categoriesData.getCategories);
-        }
-    }, categoriesData)
+  useEffect(() => {
+    if (!loading) {
+      setCategories(categoriesData.getCategories);
+    }
+  }, categoriesData)
 
-    return (
-        <AppWrapper>
-            <Header />
-            <Main>
-                <Routes>
-                    <Route path={`${ADMIN_ROUTE}/*`} element={<AdminRouter/>} />
-                    <Route path={`${CART_ROUTE}/*`} element={<CartPage/>} />
-                    {categories.map(category => <Route key={category.id} path={`${SHOP_ROUTE}${category.slug}/*`} element={<MainPage/>} />)}
-                    <Route path={`${SHOP_ROUTE}*`} index element={<MainPage/>} />
-                    <Route path="*" element={<PageNotFound />} />
-                </Routes>
-            </Main>
-            <Footer />
+  return (
+    <AppWrapper>
+      <Header/>
+      <Main>
+        <Routes>
+          <Route path={`${ADMIN_ROUTE}/*`} element={<AdminRouter/>}/>
+          <Route path={`${CART_ROUTE}/*`} element={<CartPage/>}/>
+          {categories.map(category => <Route key={category.id} path={`${SHOP_ROUTE}${category.slug}/*`}
+                                             element={<MainPage/>}/>)}
+          <Route path={`${SHOP_ROUTE}*`} index element={<MainPage/>}/>
+          <Route path="*" element={<PageNotFound/>}/>
+        </Routes>
+      </Main>
+      <Footer/>
 
-            <ModalController />
-            <NotificationsList />
+      <ModalController/>
+      <NotificationsList/>
 
-        </AppWrapper>
-    );
+    </AppWrapper>
+  );
 }
 
 export default App;

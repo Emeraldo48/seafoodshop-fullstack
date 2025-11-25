@@ -9,7 +9,6 @@ import {registration, tryToLogin} from "../../store/reducers/ActionCreators";
 import {modalSlice} from "../../store/reducers/modalSlice";
 import {userSlice} from "../../store/reducers/userSlice";
 import {notificationSlice} from "../../store/reducers/notificationSlice";
-import {NotificationType} from "../../types/INotification";
 
 const Form = styled.form`
     display: flex;
@@ -30,7 +29,7 @@ const SwitchWrapper = styled.div`
 `
 
 const SwitchButton = styled(Button)<{
-    $active: boolean
+  $active: boolean
 }>`
     flex: 1;
     border-radius: 0;
@@ -68,146 +67,144 @@ const ErrorMessage = styled.p`
 `
 
 const AuthModal: FC = () => {
-    const [isLogin, setIsLogin] = useState(true);
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [isValid, setIsValid] = useState(false);
-    const checkDebounce = useDebounce(checkIsValid, 500);
-    const [emailError, setEmailError] = useState<string>("");
-    const [passwordError, setPasswordError] = useState<string>("");
-    const {isAuth, isLoading, error} = useAppSelector(state => state.userReducer);
-    const dispatch = useAppDispatch();
+  const [isLogin, setIsLogin] = useState(true);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isValid, setIsValid] = useState(false);
+  const checkDebounce = useDebounce(checkIsValid, 500);
+  const [emailError, setEmailError] = useState<string>("");
+  const [passwordError, setPasswordError] = useState<string>("");
+  const {isAuth, isLoading, error} = useAppSelector(state => state.userReducer);
+  const dispatch = useAppDispatch();
 
-    useEffect(() => {
-        dispatch(userSlice.actions.clearError())
-        checkDebounce();
-    }, [email, password])
+  useEffect(() => {
+    dispatch(userSlice.actions.clearError())
+    checkDebounce();
+  }, [email, password])
 
-    useEffect(() => {
-        if(isAuth) {
-            dispatch(modalSlice.actions.clearModalWindow());
-        }
-    }, [isAuth])
+  useEffect(() => {
+    if (isAuth) {
+      dispatch(modalSlice.actions.clearModalWindow());
+    }
+  }, [isAuth])
 
-    const switchHandler = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, value: boolean) => {
-        e.preventDefault();
-        setIsLogin(value);
+  const switchHandler = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, value: boolean) => {
+    e.preventDefault();
+    setIsLogin(value);
+  }
+
+  function emailHandler(e: React.ChangeEvent<HTMLInputElement>) {
+    setEmail(e.target.value);
+    setEmailError("");
+    setIsValid(false);
+  }
+
+  function passwordHandler(e: React.ChangeEvent<HTMLInputElement>) {
+    setPassword(e.target.value);
+    setPasswordError("");
+    setIsValid(false);
+  }
+
+  function checkIsValid() {
+    const emailRegex = new RegExp('^((?!\\.)[\\w\\-_.]*[^.])(@\\w+)(\\.\\w+(\\.\\w+)?[^.\\W])$', '');
+    let ctrl = true;
+
+    if (!emailRegex.test(email)) {
+      if (email) setEmailError('Неправильный емейл');
+      ctrl = false;
+      setIsValid(false);
     }
 
-    function emailHandler(e: React.ChangeEvent<HTMLInputElement>) {
-        setEmail(e.target.value);
-        setEmailError("");
-        setIsValid(false);
+    if (password.length < 4) {
+      if (password) setPasswordError('Пароль должен быть длиннее 4-х символов');
+      ctrl = false;
+      setIsValid(false);
     }
 
-    function passwordHandler(e: React.ChangeEvent<HTMLInputElement>){
-        setPassword(e.target.value);
-        setPasswordError("");
-        setIsValid(false);
-    }
+    setIsValid(ctrl);
+  }
 
-    function checkIsValid() {
-        const emailRegex = new RegExp('^((?!\\.)[\\w\\-_.]*[^.])(@\\w+)(\\.\\w+(\\.\\w+)?[^.\\W])$', '');
-        let ctrl = true;
+  const loginButtonHandler = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.preventDefault();
+    dispatch(tryToLogin(email, password));
+  }
 
-        if(!emailRegex.test(email)) {
-            if(email) setEmailError('Неправильный емейл');
-            ctrl = false;
-            setIsValid(false);
-        }
+  const registrationButtonHandler = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.preventDefault();
+    dispatch(registration(email, password));
+  }
 
-        if(password.length < 4) {
-            if(password) setPasswordError('Пароль должен быть длиннее 4-х символов');
-            ctrl = false;
-            setIsValid(false);
-        }
+  return (
+    <Form>
+      <SwitchWrapper>
+        <SwitchButton
+          onClick={(e) => switchHandler(e, true)}
+          $active={isLogin}
+        >
+          Вход
+        </SwitchButton>
 
-        setIsValid(ctrl);
-    }
+        <SwitchButton
+          onClick={(e) => switchHandler(e, false)}
+          $active={!isLogin}
+        >
+          Регистрация
+        </SwitchButton>
+      </SwitchWrapper>
 
-    const loginButtonHandler = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-        e.preventDefault();
-        dispatch(tryToLogin(email, password));
-    }
-
-    const registrationButtonHandler = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-        e.preventDefault();
-        dispatch(registration(email, password));
-    }
-
-    return (
-        <Form>
-            <SwitchWrapper>
-                <SwitchButton
-                    onClick={(e) => switchHandler(e, true)}
-                    $active={isLogin}
-                >
-                    Вход
-                </SwitchButton>
-
-                <SwitchButton
-                    onClick={(e) => switchHandler(e, false)}
-                    $active={!isLogin}
-                >
-                    Регистрация
-                </SwitchButton>
-            </SwitchWrapper>
-
-            <h2>{isLogin?"Вход":"Регистрация"}</h2>
+      <h2>{isLogin ? "Вход" : "Регистрация"}</h2>
 
 
-            <InputsHandler>
-                <EmailInput
-                    onChange={e => emailHandler(e)}
-                    placeholder="Введите почту"
-                />
+      <InputsHandler>
+        <EmailInput
+          onChange={e => emailHandler(e)}
+          placeholder="Введите почту"
+        />
 
-                <ErrorMessage>{emailError}</ErrorMessage>
+        <ErrorMessage>{emailError}</ErrorMessage>
 
-                <PasswordInput
-                    onChange={e => passwordHandler(e)}
-                    placeholder="Введите пароль"
-                />
+        <PasswordInput
+          onChange={e => passwordHandler(e)}
+          placeholder="Введите пароль"
+        />
 
-                <ErrorMessage>{passwordError}</ErrorMessage>
-            </InputsHandler>
-
-
+        <ErrorMessage>{passwordError}</ErrorMessage>
+      </InputsHandler>
 
 
-            {isLogin
-                ?
-                <>
-                    <BigButton
-                        $unactive={!!isLoading}
-                        onClick={loginButtonHandler}
-                        disabled={!isValid}
-                    >
-                        {!isLoading
-                            ? "Войти"
-                            : <Loading />
-                        }
-                    </BigButton>
-                </>
-                :
-                <>
-                    <BigButton
-                        $unactive={!!isLoading}
-                        onClick={registrationButtonHandler}
-                        disabled={!isValid}
-                    >
-                        {!isLoading
-                            ? "Зарегистрироваться"
-                            : <Loading />
-                        }
-                    </BigButton>
-
-                </>
+      {isLogin
+        ?
+        <>
+          <BigButton
+            $unactive={!!isLoading}
+            onClick={loginButtonHandler}
+            disabled={!isValid}
+          >
+            {!isLoading
+              ? "Войти"
+              : <Loading/>
             }
-            {error && <ErrorMessage>{error}</ErrorMessage>}
+          </BigButton>
+        </>
+        :
+        <>
+          <BigButton
+            $unactive={!!isLoading}
+            onClick={registrationButtonHandler}
+            disabled={!isValid}
+          >
+            {!isLoading
+              ? "Зарегистрироваться"
+              : <Loading/>
+            }
+          </BigButton>
 
-        </Form>
-    );
+        </>
+      }
+      {error && <ErrorMessage>{error}</ErrorMessage>}
+
+    </Form>
+  );
 };
 
 export default AuthModal;

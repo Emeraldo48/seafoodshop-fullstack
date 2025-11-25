@@ -1,5 +1,4 @@
 import React, {FC, useState} from 'react';
-import {IProduct} from "../../types/Product";
 import styled from "styled-components";
 import {BigButton} from "../Button/Button";
 import {useAppDispatch, useAppSelector} from "../../hooks/redux";
@@ -81,61 +80,61 @@ const BuyButton = styled(BigButton)`
 `
 
 const ProductModal: FC = () => {
-    const {isAuth, id} = useAppSelector(state => state.userReducer);
-    const {product} = useAppSelector(state => state.modalReducer.data);
-    const [count, setCount] = useState<number>(1);
-    const dispatch = useAppDispatch();
+  const {isAuth, id} = useAppSelector(state => state.userReducer);
+  const {product} = useAppSelector(state => state.modalReducer.data);
+  const [count, setCount] = useState<number>(1);
+  const dispatch = useAppDispatch();
 
-    const handleCount = (value: number) => {
-        if(value < 1) value = 1;
-        if(value > 99) value = 99;
-        setCount(value);
+  const handleCount = (value: number) => {
+    if (value < 1) value = 1;
+    if (value > 99) value = 99;
+    setCount(value);
+  }
+
+  const handleBuy = () => {
+    if (isAuth && id !== undefined) {
+      dispatch(addProductToCart(id, product.id, count));
+      dispatch(modalSlice.actions.clearModalWindow());
+    } else {
+      dispatch(notificationSlice.actions.addNotification({
+        id: Date.now(),
+        type: NotificationType.WARNING,
+        duration: 3000,
+        message: "Вы не авторизованы",
+        count: 1
+      }))
     }
+  }
 
-    const handleBuy = () => {
-        if(isAuth && id !== undefined) {
-            dispatch(addProductToCart(id, product.id, count));
-            dispatch(modalSlice.actions.clearModalWindow());
-        } else {
-            dispatch(notificationSlice.actions.addNotification({
-                id: Date.now(),
-                type: NotificationType.WARNING,
-                duration: 3000,
-                message: "Вы не авторизованы",
-                count: 1
-            }))
-        }
-    }
-
-    return (
-        <Wrapper>
-            <ImageWrapper>
-                <Image src={process.env.REACT_APP_URL + product.img} alt={product.name}/>
-            </ImageWrapper>
-            <DescriptionWrapper>
-                <InfoBlock>
-                    <InfoTitle>{product.name}</InfoTitle>
-                    <InfoWeight>{String(product.weight)} г.</InfoWeight>
-                    <InfoDescription>{product.description}</InfoDescription>
-                </InfoBlock>
-                <BuyBlock>
-                    <BuyPrice>{(product.price*count).toFixed(0)} ₽</BuyPrice>
-                    <BuyOptions>
-                        <Counter
-                            value={count}
-                            setValue={handleCount}
-                        ></Counter>
-                        <BuyButton
-                            disabled={!isAuth}
-                            onClick={handleBuy}
-                        >
-                            В корзину
-                        </BuyButton>
-                    </BuyOptions>
-                </BuyBlock>
-            </DescriptionWrapper>
-        </Wrapper>
-    );
+  return (
+    <Wrapper>
+      <ImageWrapper>
+        <Image src={process.env.REACT_APP_URL + product.img} alt={product.name}/>
+      </ImageWrapper>
+      <DescriptionWrapper>
+        <InfoBlock>
+          <InfoTitle>{product.name}</InfoTitle>
+          <InfoWeight>{String(product.weight)} г.</InfoWeight>
+          <InfoDescription>{product.description}</InfoDescription>
+        </InfoBlock>
+        <BuyBlock>
+          <BuyPrice>{(product.price * count).toFixed(0)} ₽</BuyPrice>
+          <BuyOptions>
+            <Counter
+              value={count}
+              setValue={handleCount}
+            ></Counter>
+            <BuyButton
+              disabled={!isAuth}
+              onClick={handleBuy}
+            >
+              В корзину
+            </BuyButton>
+          </BuyOptions>
+        </BuyBlock>
+      </DescriptionWrapper>
+    </Wrapper>
+  );
 };
 
 export default ProductModal;

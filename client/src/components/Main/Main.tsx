@@ -6,15 +6,15 @@ const Wrapper = styled.div`
 `
 
 interface MainProps {
-    children: ReactNode
+  children: ReactNode
 }
 
 const Main: FC<MainProps> = ({children}) => {
-    return (
-        <Wrapper>
-            {children}
-        </Wrapper>
-    );
+  return (
+    <Wrapper>
+      {children}
+    </Wrapper>
+  );
 };
 
 export default Main;

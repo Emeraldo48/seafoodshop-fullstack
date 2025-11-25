@@ -32,130 +32,129 @@ const CartWrapper = styled.section`
 `
 
 
-
 const CartPage = () => {
-    const {products: cartProducts, isLoading: isLoadingCart} = useAppSelector(state => state.cartReducer);
-    const {products: allProducts, isLoading: isLoadingProducts} = useAppSelector(state => state.productReducer);
-    const [loaded, setLoaded] = useState<boolean>(false);
-    const dispatch = useAppDispatch();
-    const {isAuth, id} = useAppSelector(state => state.userReducer);
-    const navigate = useNavigate();
+  const {products: cartProducts, isLoading: isLoadingCart} = useAppSelector(state => state.cartReducer);
+  const {products: allProducts, isLoading: isLoadingProducts} = useAppSelector(state => state.productReducer);
+  const [loaded, setLoaded] = useState<boolean>(false);
+  const dispatch = useAppDispatch();
+  const {isAuth, id} = useAppSelector(state => state.userReducer);
+  const navigate = useNavigate();
 
 
-    useDocumentTitle('Корзина | ' + process.env.REACT_APP_NAME);
-    useEffect(() => {
-        if(isAuth && id !== undefined) {
-            dispatch(loadAllProducts());
-            dispatch(getCartProducts(id))
-        }
-    }, [isAuth]);
-
-    useEffect(() => {
-        if(!isLoadingCart && !isLoadingProducts) {
-            setLoaded(true);
-        } else {
-            setLoaded(false);
-        }
-    }, [isLoadingCart, isLoadingProducts]);
-
-    const handleBuy = () => {
-        if(!isAuth || id === undefined) {
-            dispatch(notificationSlice.actions.addNotification({
-                id: Date.now(),
-                type: NotificationType.WARNING,
-                duration: 3000,
-                message: "Вы не авторизованы",
-                count: 1
-            }));
-            return;
-        }
-        dispatch(clearCart(id))
-            .then(() => {
-                dispatch(notificationSlice.actions.addNotification({
-                    id: Date.now(),
-                    type: NotificationType.SUCCESS,
-                    duration: 3000,
-                    message: "Успешная покупка!",
-                    count: 1
-                }))
-            })
-            .then(() => {
-                navigate(SHOP_ROUTE);
-            });
+  useDocumentTitle('Корзина | ' + process.env.REACT_APP_NAME);
+  useEffect(() => {
+    if (isAuth && id !== undefined) {
+      dispatch(loadAllProducts());
+      dispatch(getCartProducts(id))
     }
+  }, [isAuth]);
 
-    const handleDelete = useCallback((productId: number) => {
-        if(!isAuth || id === undefined) {
-            dispatch(notificationSlice.actions.addNotification({
-                id: Date.now(),
-                type: NotificationType.WARNING,
-                duration: 3000,
-                message: "Вы не авторизованы",
-                count: 1
-            }));
-            return;
-        }
-        dispatch(removeProductFromCart(id, productId))
-    }, [isAuth, id, dispatch]);
-
-    const handleClearCart = () => {
-        if(!isAuth || id === undefined) {
-            dispatch(notificationSlice.actions.addNotification({
-                id: Date.now(),
-                type: NotificationType.WARNING,
-                duration: 3000,
-                message: "Вы не авторизованы",
-                count: 1
-            }));
-            return;
-        }
-        dispatch(clearCart(id)).then(() => {
-            dispatch(notificationSlice.actions.addNotification({
-                id: Date.now(),
-                type: NotificationType.INFO,
-                duration: 3000,
-                message: "Корзина очищена!",
-                count: 1
-            }));
-        });
+  useEffect(() => {
+    if (!isLoadingCart && !isLoadingProducts) {
+      setLoaded(true);
+    } else {
+      setLoaded(false);
     }
+  }, [isLoadingCart, isLoadingProducts]);
 
-    const calculateSum = useMemo(() => {
-        if(!loaded) return 0;
-        return cartProducts.reduce((acc, value) => acc + value.count * allProducts[value.productId].price, 0)
-    }, [cartProducts, loaded, allProducts]);
+  const handleBuy = () => {
+    if (!isAuth || id === undefined) {
+      dispatch(notificationSlice.actions.addNotification({
+        id: Date.now(),
+        type: NotificationType.WARNING,
+        duration: 3000,
+        message: "Вы не авторизованы",
+        count: 1
+      }));
+      return;
+    }
+    dispatch(clearCart(id))
+      .then(() => {
+        dispatch(notificationSlice.actions.addNotification({
+          id: Date.now(),
+          type: NotificationType.SUCCESS,
+          duration: 3000,
+          message: "Успешная покупка!",
+          count: 1
+        }))
+      })
+      .then(() => {
+        navigate(SHOP_ROUTE);
+      });
+  }
+
+  const handleDelete = useCallback((productId: number) => {
+    if (!isAuth || id === undefined) {
+      dispatch(notificationSlice.actions.addNotification({
+        id: Date.now(),
+        type: NotificationType.WARNING,
+        duration: 3000,
+        message: "Вы не авторизованы",
+        count: 1
+      }));
+      return;
+    }
+    dispatch(removeProductFromCart(id, productId))
+  }, [isAuth, id, dispatch]);
+
+  const handleClearCart = () => {
+    if (!isAuth || id === undefined) {
+      dispatch(notificationSlice.actions.addNotification({
+        id: Date.now(),
+        type: NotificationType.WARNING,
+        duration: 3000,
+        message: "Вы не авторизованы",
+        count: 1
+      }));
+      return;
+    }
+    dispatch(clearCart(id)).then(() => {
+      dispatch(notificationSlice.actions.addNotification({
+        id: Date.now(),
+        type: NotificationType.INFO,
+        duration: 3000,
+        message: "Корзина очищена!",
+        count: 1
+      }));
+    });
+  }
+
+  const calculateSum = useMemo(() => {
+    if (!loaded) return 0;
+    return cartProducts.reduce((acc, value) => acc + value.count * allProducts[value.productId].price, 0)
+  }, [cartProducts, loaded, allProducts]);
 
 
-    return (
-        <CartMain>
-            <CartWrapper>
-                {(loaded && !cartProducts.length)
-                    ?
-                        <CartEmptySection />
-                    :
-                        <>
-                            <TitleTrashLine handleClearCart={handleClearCart} />
-                            {loaded && cartProducts.map((cartProduct) => {
-                                const product: IProduct = allProducts[cartProduct.productId];
-                                if(!product) return <></>
-                                return <CartProductsListItem
-                                    key={cartProduct.id}
-                                    cartProduct={cartProduct}
-                                    product={product}
-                                    setCount={(count: number) => {}}
-                                    handleDelete={() => handleDelete(cartProduct.productId)}
-                                />;
-                            })}
-                            <CartBuySection sum={calculateSum} handleBuy={handleBuy} />
+  return (
+    <CartMain>
+      <CartWrapper>
+        {(loaded && !cartProducts.length)
+          ?
+          <CartEmptySection/>
+          :
+          <>
+            <TitleTrashLine handleClearCart={handleClearCart}/>
+            {loaded && cartProducts.map((cartProduct) => {
+              const product: IProduct = allProducts[cartProduct.productId];
+              if (!product) return <></>
+              return <CartProductsListItem
+                key={cartProduct.id}
+                cartProduct={cartProduct}
+                product={product}
+                setCount={(count: number) => {
+                }}
+                handleDelete={() => handleDelete(cartProduct.productId)}
+              />;
+            })}
+            <CartBuySection sum={calculateSum} handleBuy={handleBuy}/>
 
-                        </>
-                }
+          </>
+        }
 
 
-
-            </CartWrapper>
-        </CartMain>
-    );
+      </CartWrapper>
+    </CartMain>
+  );
 };
 
 export default CartPage;

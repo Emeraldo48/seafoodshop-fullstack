@@ -29,45 +29,45 @@ const ErrorMessage = styled.p`
 `
 
 const AddCategoryModal = () => {
-    const [name, setName] = useState('');
-    const {data} = useAppSelector(state => state.modalReducer);
-    const [error, setError] = useState('');
+  const [name, setName] = useState('');
+  const {data} = useAppSelector(state => state.modalReducer);
+  const [error, setError] = useState('');
 
-    const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch();
 
 
-    const handleName = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setName(e.target.value)
+  const handleName = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setName(e.target.value)
+  }
+
+  const handleButton = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    if (!name) {
+      setError('Поле не должно быть пустым');
+      return;
     }
+    createCategory(name).then(res => {
+      dispatch(modalSlice.actions.clearModalWindow());
+      if (data && data.onAdd) data.onAdd();
+    }).catch(e => {
+      setError(getErrorMessage(e));
+    });
 
-    const handleButton = (e: React.MouseEvent<HTMLButtonElement>)=> {
-        e.preventDefault();
-        if(!name) {
-            setError('Поле не должно быть пустым');
-            return;
-        }
-        createCategory(name).then(res => {
-            dispatch(modalSlice.actions.clearModalWindow());
-            if(data && data.onAdd) data.onAdd();
-        }).catch(e => {
-            setError(getErrorMessage(e));
-        });
+  }
 
-    }
-
-    return (
-        <Form>
-            <Title>Добавить категорию</Title>
-            <TextInput
-                onChange={handleName}
-                value={name}
-                placeholder="Введите название категории"
-                required
-            />
-            <BigButton onClick={handleButton}>Отправить</BigButton>
-            {error && <ErrorMessage>{error}</ErrorMessage>}
-        </Form>
-    );
+  return (
+    <Form>
+      <Title>Добавить категорию</Title>
+      <TextInput
+        onChange={handleName}
+        value={name}
+        placeholder="Введите название категории"
+        required
+      />
+      <BigButton onClick={handleButton}>Отправить</BigButton>
+      {error && <ErrorMessage>{error}</ErrorMessage>}
+    </Form>
+  );
 };
 
 export default AddCategoryModal;

@@ -7,24 +7,24 @@ import notificationReducer from "./reducers/notificationSlice";
 
 
 const rootReducer = combineReducers({
-    userReducer,
-    modalReducer,
-    cartReducer,
-    productReducer,
-    notificationReducer,
+  userReducer,
+  modalReducer,
+  cartReducer,
+  productReducer,
+  notificationReducer,
 
 });
 
 export const setupStore = () => {
-    return configureStore({
-        reducer: rootReducer,
-        middleware: getDefaultMiddleware => (
-            getDefaultMiddleware({
-                serializableCheck: false
-            })
-        )
+  return configureStore({
+    reducer: rootReducer,
+    middleware: getDefaultMiddleware => (
+      getDefaultMiddleware({
+        serializableCheck: false
+      })
+    )
 
-    })
+  })
 }
 
 export type RootState = ReturnType<typeof rootReducer>;

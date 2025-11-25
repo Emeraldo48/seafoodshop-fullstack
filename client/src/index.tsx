@@ -9,12 +9,12 @@ import {setupStore} from "./store/store";
 import {BrowserRouter} from "react-router-dom";
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
-    .render(
-        <BrowserRouter>
-            <Provider store={setupStore()}>
-                <ApolloProvider client={apolloClient}>
-                    <App />
-                </ApolloProvider>
-            </Provider>
-        </BrowserRouter>
-    );
+  .render(
+    <BrowserRouter>
+      <Provider store={setupStore()}>
+        <ApolloProvider client={apolloClient}>
+          <App/>
+        </ApolloProvider>
+      </Provider>
+    </BrowserRouter>
+  );

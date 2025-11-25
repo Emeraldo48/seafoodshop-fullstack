@@ -23,61 +23,67 @@ const ProductsWrapper = styled.div`
 `
 
 interface ProductsSectionProps {
-    productsCategory: ProductsCategory
-    handleButtonClick: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, product: IProduct) => void
-    handleProductClick: (product: IProduct, category: ICategory) => void
-    cartProducts: ICartProduct[]
-    parentRef: MutableRefObject<null | HTMLDivElement>
+  productsCategory: ProductsCategory
+  handleButtonClick: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, product: IProduct) => void
+  handleProductClick: (product: IProduct, category: ICategory) => void
+  cartProducts: ICartProduct[]
+  parentRef: MutableRefObject<null | HTMLDivElement>
 }
 
-const ProductsSection: FC<ProductsSectionProps> = ({productsCategory, handleProductClick, handleButtonClick, cartProducts, parentRef}) => {
-    const childRef = useRef<HTMLDivElement>(null);
-    useEffect(() => {
-        const [,categoryPath, productPath] = window.location.pathname.split("/").map(el=>el.replace("/",""));
-        const child = childRef.current as HTMLDivElement;
-        const observer = new IntersectionObserver((entries) => {
-            if(entries[0].isIntersecting && categoryPath !== productsCategory.category.slug) {
-                window.history.pushState(null, "", `/${productsCategory.category.slug}`);
-            }
-        }, {
-            threshold: 0.6
-        });
-        observer.observe(child);
-        if(categoryPath === productsCategory.category.slug) {
-            child.scrollIntoView();
-        }
-        if(productPath) {
-            const activeProduct = productsCategory.products.find(product => product.slug === productPath);
-            if(activeProduct) {
-                handleProductClick(activeProduct, productsCategory.category);
-            }
-        }
-        return () => {
-            observer.unobserve(child);
-        }
-    }, [parentRef, childRef, handleProductClick, productsCategory]);
+const ProductsSection: FC<ProductsSectionProps> = ({
+                                                     productsCategory,
+                                                     handleProductClick,
+                                                     handleButtonClick,
+                                                     cartProducts,
+                                                     parentRef
+                                                   }) => {
+  const childRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const [, categoryPath, productPath] = window.location.pathname.split("/").map(el => el.replace("/", ""));
+    const child = childRef.current as HTMLDivElement;
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting && categoryPath !== productsCategory.category.slug) {
+        window.history.pushState(null, "", `/${productsCategory.category.slug}`);
+      }
+    }, {
+      threshold: 0.6
+    });
+    observer.observe(child);
+    if (categoryPath === productsCategory.category.slug) {
+      child.scrollIntoView();
+    }
+    if (productPath) {
+      const activeProduct = productsCategory.products.find(product => product.slug === productPath);
+      if (activeProduct) {
+        handleProductClick(activeProduct, productsCategory.category);
+      }
+    }
+    return () => {
+      observer.unobserve(child);
+    }
+  }, [parentRef, childRef, handleProductClick, productsCategory]);
 
-    return (
-        <Wrapper
-            key={productsCategory.category.slug}
-            data-anchor-id={productsCategory.category.slug}
-            ref={childRef}
-        >
-            <ProductsTitle>{productsCategory.category.name}</ProductsTitle>
-            <ProductsWrapper>
-                {productsCategory.products.map(product => {
-                        return <ProductsItem
-                            key={product.slug}
-                            handleButtonClick={handleButtonClick}
-                            handleProductClick={() => handleProductClick(product, productsCategory.category)}
-                            card={product}
-                            cartProduct={cartProducts.find(cartProduct => cartProduct.productId == product.id)}
-                        />
-                    }
-                )}
-            </ProductsWrapper>
-        </Wrapper>
-    );
+  return (
+    <Wrapper
+      key={productsCategory.category.slug}
+      data-anchor-id={productsCategory.category.slug}
+      ref={childRef}
+    >
+      <ProductsTitle>{productsCategory.category.name}</ProductsTitle>
+      <ProductsWrapper>
+        {productsCategory.products.map(product => {
+            return <ProductsItem
+              key={product.slug}
+              handleButtonClick={handleButtonClick}
+              handleProductClick={() => handleProductClick(product, productsCategory.category)}
+              card={product}
+              cartProduct={cartProducts.find(cartProduct => cartProduct.productId == product.id)}
+            />
+          }
+        )}
+      </ProductsWrapper>
+    </Wrapper>
+  );
 };
 
 export default ProductsSection;

@@ -4,13 +4,13 @@ import {FaCircleInfo} from "react-icons/fa6";
 import {NotificationText, NotificationWrapper} from "./Notification";
 
 const Wrapper = styled(NotificationWrapper)<{
-    $isFade?: boolean
+  $isFade?: boolean
 }>`
     background-color: lightgray;
 `
 
 const Text = styled(NotificationText)`
-    
+
 `
 
 const InfoIcon = styled(FaCircleInfo)`
@@ -18,18 +18,18 @@ const InfoIcon = styled(FaCircleInfo)`
 `
 
 interface InfoNotificationProps {
-    text: string
-    isFade: boolean
-    count: number
+  text: string
+  isFade: boolean
+  count: number
 }
 
 const InfoNotification: FC<InfoNotificationProps> = ({text, isFade}) => {
-    return (
-        <Wrapper $isFade={isFade}>
-            <InfoIcon />
-            <Text>{text}</Text>
-        </Wrapper>
-    );
+  return (
+    <Wrapper $isFade={isFade}>
+      <InfoIcon/>
+      <Text>{text}</Text>
+    </Wrapper>
+  );
 };
 
 export default InfoNotification;

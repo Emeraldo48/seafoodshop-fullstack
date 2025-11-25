@@ -22,25 +22,25 @@ const Title = styled.h1`
 `
 
 const AdminMain = () => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-    return (
-        <Container>
-            <Wrapper>
-                <Title>Выберите раздел</Title>
-                <BigButton
-                    onClick={e => navigate('./categories')}
-                >
-                    Категории
-                </BigButton>
-                <BigButton
-                    onClick={e => navigate('./products')}
-                >
-                    Продукты
-                </BigButton>
-            </Wrapper>
-        </Container>
-    );
+  return (
+    <Container>
+      <Wrapper>
+        <Title>Выберите раздел</Title>
+        <BigButton
+          onClick={e => navigate('./categories')}
+        >
+          Категории
+        </BigButton>
+        <BigButton
+          onClick={e => navigate('./products')}
+        >
+          Продукты
+        </BigButton>
+      </Wrapper>
+    </Container>
+  );
 };
 
 export default AdminMain;

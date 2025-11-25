@@ -2,7 +2,7 @@ import {NotificationFadeAnimation, NotificationShowAnimation} from "../../utils/
 import styled, {css} from "styled-components";
 
 export const NotificationWrapper = styled.div<{
-    $isFade?: boolean
+  $isFade?: boolean
 }>`
     width: 100%;
     padding: 10px 20px;

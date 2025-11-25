@@ -1,6 +1,6 @@
 import React, {FC} from 'react';
 import styled from "styled-components";
-import {BigButton, Button, FilledButton} from "../Button/Button";
+import {Button, FilledButton} from "../Button/Button";
 import {useAppDispatch, useAppSelector} from "../../hooks/redux";
 import {ConfirmModalData, modalSlice} from "../../store/reducers/modalSlice";
 
@@ -38,30 +38,29 @@ const DeclineButton = styled(AnswerButton)`
 `
 
 
-
 const ConfirmModal: FC = () => {
-    const {onAccept, onDecline}: ConfirmModalData = useAppSelector(state => state.modalReducer.data);
-    const dispatch = useAppDispatch();
+  const {onAccept, onDecline}: ConfirmModalData = useAppSelector(state => state.modalReducer.data);
+  const dispatch = useAppDispatch();
 
-    const handleAccept = () => {
-        onAccept();
-        dispatch(modalSlice.actions.clearModalWindow());
-    }
+  const handleAccept = () => {
+    onAccept();
+    dispatch(modalSlice.actions.clearModalWindow());
+  }
 
-    const handlerDecline = () => {
-        onDecline();
-        dispatch(modalSlice.actions.clearModalWindow());
-    }
+  const handlerDecline = () => {
+    onDecline();
+    dispatch(modalSlice.actions.clearModalWindow());
+  }
 
-    return (
-        <Wrapper>
-            <Title>Вы уверены?</Title>
-            <OptionsWrapper>
-                <AnswerButton onClick={handleAccept}>Да</AnswerButton>
-                <DeclineButton onClick={handlerDecline}>Нет</DeclineButton>
-            </OptionsWrapper>
-        </Wrapper>
-    );
+  return (
+    <Wrapper>
+      <Title>Вы уверены?</Title>
+      <OptionsWrapper>
+        <AnswerButton onClick={handleAccept}>Да</AnswerButton>
+        <DeclineButton onClick={handlerDecline}>Нет</DeclineButton>
+      </OptionsWrapper>
+    </Wrapper>
+  );
 };
 
 export default ConfirmModal;

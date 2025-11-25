@@ -19,18 +19,18 @@ const Trash = styled(FaTrash)`
 `
 
 interface handleClearCart {
-    handleClearCart: () => void
+  handleClearCart: () => void
 }
 
 const TitleTrashLine: FC<handleClearCart> = ({handleClearCart}) => {
-    return (
-        <Wrapper>
-            Корзина
-            <Trash
-                onClick={handleClearCart}
-            />
-        </Wrapper>
-    );
+  return (
+    <Wrapper>
+      Корзина
+      <Trash
+        onClick={handleClearCart}
+      />
+    </Wrapper>
+  );
 };
 
 export default TitleTrashLine;

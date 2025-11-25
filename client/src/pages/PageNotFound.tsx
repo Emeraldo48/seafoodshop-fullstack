@@ -20,18 +20,18 @@ const Title = styled.h1`
 
 
 const PageNotFound = () => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-    return (
-        <Wrapper>
-            <Title>Страница не найдена</Title>
-            <BigButton
-                onClick={e => navigate(SHOP_ROUTE)}
-            >
-                Вернуться на главную
-            </BigButton>
-        </Wrapper>
-    );
+  return (
+    <Wrapper>
+      <Title>Страница не найдена</Title>
+      <BigButton
+        onClick={e => navigate(SHOP_ROUTE)}
+      >
+        Вернуться на главную
+      </BigButton>
+    </Wrapper>
+  );
 };
 
 export default PageNotFound;

@@ -18,8 +18,8 @@ const BrandWrapper = styled.div`
 `
 
 const LogoImage = styled.img.attrs({
-    src: logo,
-    alt: 'logo'
+  src: logo,
+  alt: 'logo'
 })`
     width: 143px;
     height: 32px;
@@ -40,14 +40,14 @@ const PhoneNumber = styled.a`
 `
 
 const Footer = () => {
-    return (
-        <Wrapper>
-            <BrandWrapper>
-                <LogoImage />
-                <PhoneNumber href={'tel:+78005553535'}>+7 (800) 555-35-35</PhoneNumber>
-            </BrandWrapper>
-        </Wrapper>
-    );
+  return (
+    <Wrapper>
+      <BrandWrapper>
+        <LogoImage/>
+        <PhoneNumber href={'tel:+78005553535'}>+7 (800) 555-35-35</PhoneNumber>
+      </BrandWrapper>
+    </Wrapper>
+  );
 };
 
 export default Footer;

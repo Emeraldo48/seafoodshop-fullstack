@@ -1,4 +1,4 @@
-import React, {FC, SetStateAction} from 'react';
+import React, {FC} from 'react';
 import styled from "styled-components";
 
 const Wrapper = styled.div`
@@ -8,7 +8,7 @@ const Wrapper = styled.div`
 
 `
 
-const Option = styled.button<{$isMini: boolean}>`
+const Option = styled.button<{ $isMini: boolean }>`
     padding: ${props => props.$isMini ? 5 : 10}px 8px;
     height: ${props => props.$isMini ? 25 : 40}pxpx;
     border: none;
@@ -29,7 +29,7 @@ const Option = styled.button<{$isMini: boolean}>`
     }
 `
 
-const ShowValue = styled.div<{$isMini: boolean}>`
+const ShowValue = styled.div<{ $isMini: boolean }>`
     padding: ${props => props.$isMini ? 5 : 10}px 8px;
     height: ${props => props.$isMini ? 25 : 40}pxpx;
     color: var(--color-text-secondary);
@@ -40,35 +40,35 @@ const ShowValue = styled.div<{$isMini: boolean}>`
 `
 
 interface CounterProps {
-    value: number
-    setValue: (value: number) => void
-    isMini?: boolean
-    canBeZero?: boolean
+  value: number
+  setValue: (value: number) => void
+  isMini?: boolean
+  canBeZero?: boolean
 }
 
 
 const Counter: FC<CounterProps> = ({value, setValue, isMini = false, canBeZero = false}) => {
 
-    return (
-        <Wrapper onClick={e => e.stopPropagation()}>
-            <Option
-                $isMini={isMini}
-                onClick={e => setValue(value-1)}
-                disabled={!canBeZero && value < 2}
-            >-</Option>
-            <ShowValue
-                $isMini={isMini}
-            >
-                {value}
-            </ShowValue>
-            <Option
-                $isMini={isMini}
-                onClick={e => setValue(value+1)}
-            >
-                +
-            </Option>
-        </Wrapper>
-    );
+  return (
+    <Wrapper onClick={e => e.stopPropagation()}>
+      <Option
+        $isMini={isMini}
+        onClick={e => setValue(value - 1)}
+        disabled={!canBeZero && value < 2}
+      >-</Option>
+      <ShowValue
+        $isMini={isMini}
+      >
+        {value}
+      </ShowValue>
+      <Option
+        $isMini={isMini}
+        onClick={e => setValue(value + 1)}
+      >
+        +
+      </Option>
+    </Wrapper>
+  );
 };
 
 export default Counter;

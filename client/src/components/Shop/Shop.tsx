@@ -9,17 +9,17 @@ const Wrapper = styled.main`
 `
 
 const Shop = () => {
-    return (
-        <Wrapper>
-            <CategoryNavigation />
-            <Slider>
-                <img src={process.env.REACT_APP_URL + `/${1}.webp`} alt={String(1)} draggable={false}/>
-                <img src={process.env.REACT_APP_URL + `/${2}.webp`} alt={String(2)} draggable={false}/>
-                <img src={process.env.REACT_APP_URL + `/${3}.webp`} alt={String(3)} draggable={false}/>
-            </Slider>
-            <ProductsList />
-        </Wrapper>
-    );
+  return (
+    <Wrapper>
+      <CategoryNavigation/>
+      <Slider>
+        <img src={process.env.REACT_APP_URL + `/${1}.webp`} alt={String(1)} draggable={false}/>
+        <img src={process.env.REACT_APP_URL + `/${2}.webp`} alt={String(2)} draggable={false}/>
+        <img src={process.env.REACT_APP_URL + `/${3}.webp`} alt={String(3)} draggable={false}/>
+      </Slider>
+      <ProductsList/>
+    </Wrapper>
+  );
 };
 
 export default Shop;

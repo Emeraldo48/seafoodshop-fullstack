@@ -1,6 +1,6 @@
 import React, {FC} from 'react';
 import styled from "styled-components";
-import {BigButton, FilledButton} from "../../Button/Button";
+import {BigButton} from "../../Button/Button";
 import {useNavigate} from "react-router-dom";
 import {SHOP_ROUTE} from "../../../types/consts";
 
@@ -41,27 +41,27 @@ const BackButton = styled(BigButton)`
 `
 
 interface CartBuySectionProps {
-    sum: number
-    handleBuy: () => void
+  sum: number
+  handleBuy: () => void
 }
 
 const CartBuySection: FC<CartBuySectionProps> = ({sum, handleBuy}) => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-    return (
-        <Wrapper>
-            <CostBlock>
-                <span></span>
-                <CostTitle>Сумма заказа:</CostTitle>
-                <CostValue>{sum} ₽</CostValue>
-            </CostBlock>
-            <Options>
-                <BackButton onClick={e => navigate(SHOP_ROUTE)}>Вернуться в меню</BackButton>
-                <BigButton onClick={handleBuy}>Оформить заказ</BigButton>
-            </Options>
+  return (
+    <Wrapper>
+      <CostBlock>
+        <span></span>
+        <CostTitle>Сумма заказа:</CostTitle>
+        <CostValue>{sum} ₽</CostValue>
+      </CostBlock>
+      <Options>
+        <BackButton onClick={e => navigate(SHOP_ROUTE)}>Вернуться в меню</BackButton>
+        <BigButton onClick={handleBuy}>Оформить заказ</BigButton>
+      </Options>
 
-        </Wrapper>
-    );
+    </Wrapper>
+  );
 };
 
 export default CartBuySection;

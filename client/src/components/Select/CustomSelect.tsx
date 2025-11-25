@@ -2,8 +2,8 @@ import React, {FC, useEffect, useState} from 'react';
 import styled from "styled-components";
 
 const Wrapper = styled.div<{
-    $active: boolean,
-    $isPlaceholder: boolean
+  $active: boolean,
+  $isPlaceholder: boolean
 }>`
     position: relative;
     display: flex;
@@ -43,47 +43,47 @@ const ChooseMenuOption = styled.div`
 `
 
 interface SelectOption {
-    value: any;
-    label: string;
+  value: any;
+  label: string;
 }
 
 interface SelectProps {
-    options: SelectOption[];
-    onChange: (option: SelectOption) => void;
-    placeholder?: string;
-    value?: SelectOption | null;
+  options: SelectOption[];
+  onChange: (option: SelectOption) => void;
+  placeholder?: string;
+  value?: SelectOption | null;
 }
 
 const CustomSelect: FC<SelectProps> = ({options, onChange, placeholder = "Выберите что-то", value = null}) => {
-    const [chosenValue, setChosenValue] = useState<SelectOption | null>(value);
-    const [active, setActive] = useState<boolean>(false);
+  const [chosenValue, setChosenValue] = useState<SelectOption | null>(value);
+  const [active, setActive] = useState<boolean>(false);
 
-    useEffect(() => {
-        setChosenValue(value);
-    })
+  useEffect(() => {
+    setChosenValue(value);
+  })
 
-    return (
-        <Wrapper
-            onClick={e => setActive(!active)}
-            $active={active}
-            $isPlaceholder={chosenValue === undefined}
-        >
-            {chosenValue ? chosenValue.label : placeholder}
-            {active && <ChooseMenu>
-                {options.map(option =>
-                    <ChooseMenuOption
-                        key={option.value}
-                        onClick={() => {
-                            onChange(option);
-                            setActive(false);
-                        }}
-                    >
-                        {option.label}
-                    </ChooseMenuOption>
-                )}
-            </ChooseMenu>}
-        </Wrapper>
-    );
+  return (
+    <Wrapper
+      onClick={e => setActive(!active)}
+      $active={active}
+      $isPlaceholder={chosenValue === undefined}
+    >
+      {chosenValue ? chosenValue.label : placeholder}
+      {active && <ChooseMenu>
+        {options.map(option =>
+          <ChooseMenuOption
+            key={option.value}
+            onClick={() => {
+              onChange(option);
+              setActive(false);
+            }}
+          >
+            {option.label}
+          </ChooseMenuOption>
+        )}
+      </ChooseMenu>}
+    </Wrapper>
+  );
 };
 
 export default CustomSelect;

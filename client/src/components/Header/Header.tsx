@@ -31,8 +31,8 @@ const LogoWrapper = styled(Link)`
 `
 
 const LogoImage = styled.img.attrs({
-    src: logo,
-    alt: 'logo'
+  src: logo,
+  alt: 'logo'
 })`
     
 `
@@ -43,53 +43,53 @@ const OptionsWrapper = styled.div`
 `
 
 const Header = () => {
-    const {isAuth, role} = useAppSelector(state => state.userReducer);
-    const dispatch = useAppDispatch();
-    const navigate = useNavigate()
+  const {isAuth, role} = useAppSelector(state => state.userReducer);
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate()
 
-    const handleExit = () => {
-        dispatch(logout())
-        navigate(SHOP_ROUTE);
-    }
+  const handleExit = () => {
+    dispatch(logout())
+    navigate(SHOP_ROUTE);
+  }
 
-    return (
-        <Wrapper>
-            <Container>
-                <Content>
-                    <LogoWrapper to={SHOP_ROUTE}>
-                        <LogoImage />
-                    </LogoWrapper>
-                    <OptionsWrapper>
-                        {isAuth
-                            ?
-                            <>
-                                {role === "ADMIN" && <Button
-                                    onClick={e => navigate(ADMIN_ROUTE)}
-                                >
-                                    Админ-панель
-                                </Button>}
-                                <Button
-                                    onClick={e => handleExit()}
-                                >
-                                    Выйти
-                                </Button>
-                            </>
-                            :
-                            <>
-                                <Button
-                                    onClick={e => dispatch(modalSlice.actions.setModalWindow({Component: AuthModal}))}
-                                >
-                                    Войти
-                                </Button>
-                            </>
-                        }
-                    </OptionsWrapper>
+  return (
+    <Wrapper>
+      <Container>
+        <Content>
+          <LogoWrapper to={SHOP_ROUTE}>
+            <LogoImage/>
+          </LogoWrapper>
+          <OptionsWrapper>
+            {isAuth
+              ?
+              <>
+                {role === "ADMIN" && <Button
+                  onClick={e => navigate(ADMIN_ROUTE)}
+                >
+                  Админ-панель
+                </Button>}
+                <Button
+                  onClick={e => handleExit()}
+                >
+                  Выйти
+                </Button>
+              </>
+              :
+              <>
+                <Button
+                  onClick={e => dispatch(modalSlice.actions.setModalWindow({Component: AuthModal}))}
+                >
+                  Войти
+                </Button>
+              </>
+            }
+          </OptionsWrapper>
 
-                </Content>
-            </Container>
-        </Wrapper>
+        </Content>
+      </Container>
+    </Wrapper>
 
-    );
+  );
 };
 
 export default Header;

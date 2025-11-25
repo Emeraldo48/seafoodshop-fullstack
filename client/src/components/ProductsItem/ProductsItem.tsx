@@ -73,58 +73,58 @@ const CartButton = styled(Button)`
 
 
 interface ProductsItemProps {
-    card: IProduct
-    handleProductClick: (product: IProduct) => void
-    handleButtonClick: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, product: IProduct) => void
-    cartProduct?: ICartProduct
+  card: IProduct
+  handleProductClick: (product: IProduct) => void
+  handleButtonClick: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, product: IProduct) => void
+  cartProduct?: ICartProduct
 }
 
 const ProductsItem: FC<ProductsItemProps> = memo(({card, handleProductClick, handleButtonClick, cartProduct}) => {
 
-    const dispatch = useAppDispatch();
-    const {isAuth, id} = useAppSelector(state => state.userReducer);
+  const dispatch = useAppDispatch();
+  const {isAuth, id} = useAppSelector(state => state.userReducer);
 
-    const handleCounterChange = (count: number) => {
-        if(!cartProduct || !isAuth || id === undefined) return;
-        if(count > 99) count = 99;
-        if(count > cartProduct.count) {
-            dispatch(addProductToCart(id, card.id, count - cartProduct.count));
-        }
-        if(count < cartProduct.count) {
-            dispatch(takeProductFromCart(id, card.id, count - cartProduct.count));
-        }
+  const handleCounterChange = (count: number) => {
+    if (!cartProduct || !isAuth || id === undefined) return;
+    if (count > 99) count = 99;
+    if (count > cartProduct.count) {
+      dispatch(addProductToCart(id, card.id, count - cartProduct.count));
     }
+    if (count < cartProduct.count) {
+      dispatch(takeProductFromCart(id, card.id, count - cartProduct.count));
+    }
+  }
 
-    return (
-        <Wrapper
-            onClick={(e) => handleProductClick(card)}
-        >
-            <Image src={`${process.env.REACT_APP_URL}${card.img}`} alt={card.name} />
-            <NameAndWeightLine>
-                <h3>{card.name}</h3>
-                <p>{card.price} г.</p>
-            </NameAndWeightLine>
-            <Description>{card.description}</Description>
-            <BuyLine>
-                <Cost>{card.price} ₽ </Cost>
-                {cartProduct
-                    ?
-                        <Counter value={cartProduct.count} setValue={handleCounterChange} canBeZero={true} />
-                    :
-                        <CartButton
-                            onClick={e => handleButtonClick(e, card)}
-                        >
-                            В корзину
-                        </CartButton>
-                }
+  return (
+    <Wrapper
+      onClick={(e) => handleProductClick(card)}
+    >
+      <Image src={`${process.env.REACT_APP_URL}${card.img}`} alt={card.name}/>
+      <NameAndWeightLine>
+        <h3>{card.name}</h3>
+        <p>{card.price} г.</p>
+      </NameAndWeightLine>
+      <Description>{card.description}</Description>
+      <BuyLine>
+        <Cost>{card.price} ₽ </Cost>
+        {cartProduct
+          ?
+          <Counter value={cartProduct.count} setValue={handleCounterChange} canBeZero={true}/>
+          :
+          <CartButton
+            onClick={e => handleButtonClick(e, card)}
+          >
+            В корзину
+          </CartButton>
+        }
 
-            </BuyLine>
-        </Wrapper>
-    );
+      </BuyLine>
+    </Wrapper>
+  );
 }, areEqual);
 
 function areEqual(prevProps: ProductsItemProps, nextProps: ProductsItemProps) {
-    return prevProps.cartProduct?.count === nextProps.cartProduct?.count;
+  return prevProps.cartProduct?.count === nextProps.cartProduct?.count;
 }
 
 export default ProductsItem;

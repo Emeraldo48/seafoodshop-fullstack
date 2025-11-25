@@ -48,40 +48,40 @@ const TotalPrice = styled.div`
 
 
 const CartButtonProductsList = () => {
-    const {products:cartProducts, isLoading:cartProductsLoading, error} = useAppSelector(state => state.cartReducer);
-    const allProducts: Record<number, IProduct> = useAppSelector(state => state.productReducer.products);
-    const dispatch = useAppDispatch();
+  const {products: cartProducts, isLoading: cartProductsLoading, error} = useAppSelector(state => state.cartReducer);
+  const allProducts: Record<number, IProduct> = useAppSelector(state => state.productReducer.products);
+  const dispatch = useAppDispatch();
 
-    useEffect(() => {
-        if(Object.keys(allProducts).length === 0) {
-            dispatch(loadAllProducts())
-        }
-    }, []);
+  useEffect(() => {
+    if (Object.keys(allProducts).length === 0) {
+      dispatch(loadAllProducts())
+    }
+  }, []);
 
-    const calculateTotalPrice = useMemo(() => {
-        if(cartProductsLoading || Object.keys(allProducts).length === 0) return 0
-        return cartProducts.reduce((acc, value) => acc + value.count * allProducts[value.productId].price, 0)
-    }, [cartProducts, allProducts]);
+  const calculateTotalPrice = useMemo(() => {
+    if (cartProductsLoading || Object.keys(allProducts).length === 0) return 0
+    return cartProducts.reduce((acc, value) => acc + value.count * allProducts[value.productId].price, 0)
+  }, [cartProducts, allProducts]);
 
-    return (
-        <Wrapper>
-            <ListWrapper>
-                {!cartProductsLoading && Object.keys(allProducts).length !== 0 && cartProducts.map(cartProduct => {
+  return (
+    <Wrapper>
+      <ListWrapper>
+        {!cartProductsLoading && Object.keys(allProducts).length !== 0 && cartProducts.map(cartProduct => {
 
-                    const product: IProduct = allProducts[cartProduct.productId];
+            const product: IProduct = allProducts[cartProduct.productId];
 
-                    return <CartButtonProductsListItem key={cartProduct.id} cartProduct={cartProduct} product={product} />
+            return <CartButtonProductsListItem key={cartProduct.id} cartProduct={cartProduct} product={product}/>
 
-                    }
-                )}
+          }
+        )}
 
-            </ListWrapper>
-            <TotalPrice>
-                <span>Итого:</span>
-                <span>{calculateTotalPrice} ₽</span>
-            </TotalPrice>
-        </Wrapper>
-    );
+      </ListWrapper>
+      <TotalPrice>
+        <span>Итого:</span>
+        <span>{calculateTotalPrice} ₽</span>
+      </TotalPrice>
+    </Wrapper>
+  );
 };
 
 export default CartButtonProductsList;

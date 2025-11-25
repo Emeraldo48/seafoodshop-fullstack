@@ -6,20 +6,20 @@ import ProductAdminPage from "./ProductAdminPage";
 import useDocumentTitle from "../../hooks/useDocumentTitle";
 
 const AdminRouter = () => {
-    useDocumentTitle('Панель администратора | ' + process.env.REACT_APP_NAME);
+  useDocumentTitle('Панель администратора | ' + process.env.REACT_APP_NAME);
 
-    const {role} = useAppSelector(state => state.userReducer);
+  const {role} = useAppSelector(state => state.userReducer);
 
 
-    if(role !== "ADMIN") return <Navigate to={'/'} />
+  if (role !== "ADMIN") return <Navigate to={'/'}/>
 
-    return (
-        <Routes>
-            <Route path={'/categories'} element={<CategoryAdminPage />} />
-            <Route path={'/products'} element={<ProductAdminPage />} />
-            <Route index element={<AdminMain />} />
-        </Routes>
-    );
+  return (
+    <Routes>
+      <Route path={'/categories'} element={<CategoryAdminPage/>}/>
+      <Route path={'/products'} element={<ProductAdminPage/>}/>
+      <Route index element={<AdminMain/>}/>
+    </Routes>
+  );
 };
 
 export default AdminRouter;

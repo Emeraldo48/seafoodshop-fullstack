@@ -25,7 +25,7 @@ const Wrapper = styled.div`
     }
 `
 
-const HoverWindow = styled.div<{$isFade: boolean}>`
+const HoverWindow = styled.div<{ $isFade: boolean }>`
     position: absolute;
     content: '';
     padding-top: 20px;
@@ -68,83 +68,83 @@ const CaretUp = styled(FaCaretUp)`
 `
 
 const CartButton = () => {
-    const {id, isAuth} = useAppSelector(state => state.userReducer)
-    const {products, isLoading, error} = useAppSelector(state => state.cartReducer);
-    const dispatch = useAppDispatch();
-    const [isActive, setIsActive] = useState(false);
-    const fadeRef = useRef<null | NodeJS.Timeout>(null);
-    const [isFade, setIsFade] = useState(false);
-    const navigation = useNavigate();
+  const {id, isAuth} = useAppSelector(state => state.userReducer)
+  const {products, isLoading, error} = useAppSelector(state => state.cartReducer);
+  const dispatch = useAppDispatch();
+  const [isActive, setIsActive] = useState(false);
+  const fadeRef = useRef<null | NodeJS.Timeout>(null);
+  const [isFade, setIsFade] = useState(false);
+  const navigation = useNavigate();
 
-    const handleMouseEnter = () => {
-        if(fadeRef.current) {
-            clearTimeout(fadeRef.current);
-            fadeRef.current = null;
-        }
-        setIsFade(false);
-        setIsActive(true)
+  const handleMouseEnter = () => {
+    if (fadeRef.current) {
+      clearTimeout(fadeRef.current);
+      fadeRef.current = null;
     }
+    setIsFade(false);
+    setIsActive(true)
+  }
 
-    const handleMouseLeave = () => {
-        setIsFade(true);
-        fadeRef.current = setTimeout(() => {
-            setIsFade(false);
-            setIsActive(false);
-        }, 500);
+  const handleMouseLeave = () => {
+    setIsFade(true);
+    fadeRef.current = setTimeout(() => {
+      setIsFade(false);
+      setIsActive(false);
+    }, 500);
+  }
+
+  const handleCartButtonClick = () => {
+    if (isAuth && id !== undefined) {
+      if (products.length === 0) {
+        dispatch(notificationSlice.actions.addNotification({
+          id: Date.now(),
+          type: NotificationType.WARNING,
+          duration: 3000,
+          message: "У вас пустая корзина",
+          count: 1
+        }));
+        return;
+      }
+      navigation(CART_ROUTE);
+    } else {
+      dispatch(notificationSlice.actions.addNotification({
+        id: Date.now(),
+        type: NotificationType.WARNING,
+        duration: 3000,
+        message: "Вы не авторизованы",
+        count: 1
+      }))
     }
-
-    const handleCartButtonClick = () => {
-        if(isAuth && id !== undefined) {
-            if(products.length === 0) {
-                dispatch(notificationSlice.actions.addNotification({
-                    id: Date.now(),
-                    type: NotificationType.WARNING,
-                    duration: 3000,
-                    message: "У вас пустая корзина",
-                    count: 1
-                }));
-                return;
-            }
-            navigation(CART_ROUTE);
-        } else {
-            dispatch(notificationSlice.actions.addNotification({
-                id: Date.now(),
-                type: NotificationType.WARNING,
-                duration: 3000,
-                message: "Вы не авторизованы",
-                count: 1
-            }))
-        }
+  }
+  useEffect(() => {
+    if (isAuth && id !== undefined) {
+      dispatch(getCartProducts(id));
     }
-    useEffect(() => {
-        if(isAuth && id !== undefined) {
-            dispatch(getCartProducts(id));
-        }
-    }, [isAuth]);
+  }, [isAuth]);
 
-    return (
-        <Wrapper
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
-        >
-            <FilledButton
-                onClick={handleCartButtonClick}
-            >
-                {products.length > 0 ? `Корзина (${products.reduce((acc, value) => acc + value.count, 0)})` : "Корзина"}
-            </FilledButton>
-            {isActive && <HoverWindow $isFade={isFade}>
-                <HoverContent>
-                    {products.length > 0
-                        ?
-                        <CartButtonProductsList />
-                        :
-                        <EmptyCartComponent />
-                    }
-                    <CaretUp/>
-                </HoverContent>
-            </HoverWindow>}
-        </Wrapper>
-    );
+  return (
+    <Wrapper
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
+      <FilledButton
+        onClick={handleCartButtonClick}
+      >
+        {products.length > 0 ? `Корзина (${products.reduce((acc, value) => acc + value.count, 0)})` : "Корзина"}
+      </FilledButton>
+      {isActive && <HoverWindow $isFade={isFade}>
+        <HoverContent>
+          {products.length > 0
+            ?
+            <CartButtonProductsList/>
+            :
+            <EmptyCartComponent/>
+          }
+          <CaretUp/>
+        </HoverContent>
+      </HoverWindow>}
+    </Wrapper>
+  );
 };
 
 export default CartButton;

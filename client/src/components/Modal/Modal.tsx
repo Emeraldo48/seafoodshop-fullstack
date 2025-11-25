@@ -1,15 +1,12 @@
-import React, {FC, ReactElement, ReactNode, useEffect, useRef, useState} from 'react';
+import React, {FC, ReactNode, useEffect, useRef, useState} from 'react';
 import styled, {css} from "styled-components";
 import {FaXmark} from "react-icons/fa6";
-import {
-    fadeAnimation,
-    showAnimation
-} from "../../utils/animations/animations";
+import {fadeAnimation, showAnimation} from "../../utils/animations/animations";
 import {useAppDispatch, useAppSelector} from "../../hooks/redux";
 import {modalSlice, ModalState} from "../../store/reducers/modalSlice";
 
 const Layout = styled.div<{
-    $fading: boolean
+  $fading: boolean
 }>`
     position: fixed;
     top: 0;
@@ -33,7 +30,7 @@ const Layout = styled.div<{
 `
 
 const ContentWrapper = styled.div<{
-    $fading: boolean
+  $fading: boolean
 }>`
     position: relative;
     padding: 40px;
@@ -66,62 +63,65 @@ const CancelButton = styled(FaXmark)`
 `
 
 interface ModalInterface {
-    children: ReactNode
+  children: ReactNode
 }
 
 const Modal: FC<ModalInterface> = ({children}) => {
-    const [fading, setFading] = useState(false);
-    const dispatch = useAppDispatch();
-    const layoutRef = useRef<boolean>(false);
-    const {data}: ModalState = useAppSelector(state => state.modalReducer);
+  const [fading, setFading] = useState(false);
+  const dispatch = useAppDispatch();
+  const layoutRef = useRef<boolean>(false);
+  const {data}: ModalState = useAppSelector(state => state.modalReducer);
 
-    useEffect(() => {
+  useEffect(() => {
 
-        document.body.setAttribute("data-modal-open", "true");
+    document.body.setAttribute("data-modal-open", "true");
 
-        return () => {
-            document.body.removeAttribute("data-modal-open");
-        }
-    }, []);
-
-    const handleLayoutMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
-        layoutRef.current = true;
+    return () => {
+      document.body.removeAttribute("data-modal-open");
     }
+  }, []);
 
-    const handleMouseUp = (isLayout: boolean)=> {
-        if(isLayout && layoutRef.current) {
-            onHideClick();
-        }
-        layoutRef.current = false;
+  const handleLayoutMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    layoutRef.current = true;
+  }
+
+  const handleMouseUp = (isLayout: boolean) => {
+    if (isLayout && layoutRef.current) {
+      onHideClick();
     }
+    layoutRef.current = false;
+  }
 
-    const onHideClick = () => {
-        setFading(true);
-        setTimeout(() => {
-            dispatch(modalSlice.actions.clearModalWindow());
-            setFading(false);
-            if(data.onClose) data.onClose();
-        }, 200);
-    }
+  const onHideClick = () => {
+    setFading(true);
+    setTimeout(() => {
+      dispatch(modalSlice.actions.clearModalWindow());
+      setFading(false);
+      if (data.onClose) data.onClose();
+    }, 200);
+  }
 
-    return (
-        <Layout
-            $fading={fading}
-            onMouseDown={e => handleLayoutMouseDown(e)}
-            onMouseUp={e => handleMouseUp(true)}
-        >
-            <ContentWrapper
-                $fading={fading}
-                onMouseUp={e => {e.stopPropagation(); handleMouseUp(false)}}
-                onMouseDown={e => e.stopPropagation()}
-            >
-                <CancelButton
-                    onClick={e => onHideClick()}
-                />
-                {children}
-            </ContentWrapper>
-        </Layout>
-    );
+  return (
+    <Layout
+      $fading={fading}
+      onMouseDown={e => handleLayoutMouseDown(e)}
+      onMouseUp={e => handleMouseUp(true)}
+    >
+      <ContentWrapper
+        $fading={fading}
+        onMouseUp={e => {
+          e.stopPropagation();
+          handleMouseUp(false)
+        }}
+        onMouseDown={e => e.stopPropagation()}
+      >
+        <CancelButton
+          onClick={e => onHideClick()}
+        />
+        {children}
+      </ContentWrapper>
+    </Layout>
+  );
 };
 
 export default Modal

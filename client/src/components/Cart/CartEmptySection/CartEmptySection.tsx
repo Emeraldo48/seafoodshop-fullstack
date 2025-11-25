@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from "styled-components";
-import {BigButton, FilledButton} from "../../Button/Button";
+import {BigButton} from "../../Button/Button";
 import {useNavigate} from "react-router-dom";
 import {SHOP_ROUTE} from "../../../types/consts";
 
@@ -18,19 +18,19 @@ const Title = styled.h2`
 `
 
 const CartEmptySection = () => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-    return (
-        <Wrapper>
-            <Title>Корзина пуста</Title>
-            <BigButton
-                onClick={e => navigate(SHOP_ROUTE)}
-            >
-                Вернуться назад
-            </BigButton>
+  return (
+    <Wrapper>
+      <Title>Корзина пуста</Title>
+      <BigButton
+        onClick={e => navigate(SHOP_ROUTE)}
+      >
+        Вернуться назад
+      </BigButton>
 
-        </Wrapper>
-    );
+    </Wrapper>
+  );
 };
 
 export default CartEmptySection;

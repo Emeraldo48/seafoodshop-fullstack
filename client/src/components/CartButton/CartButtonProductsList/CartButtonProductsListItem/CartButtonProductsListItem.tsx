@@ -7,7 +7,7 @@ import {IProduct} from "../../../../types/Product";
 import {addProductToCart, removeProductFromCart, takeProductFromCart} from "../../../../store/reducers/ActionCreators";
 import {useAppDispatch, useAppSelector} from "../../../../hooks/redux";
 
-const ProductItem = styled.div<{$isLoading: boolean}>`
+const ProductItem = styled.div<{ $isLoading: boolean }>`
     padding: 10px 0 15px;
     margin: 0 30px;
     display: flex;
@@ -79,67 +79,67 @@ const ProductItemPrice = styled.p`
 `
 
 interface CartButtonProductsListItemProps {
-    cartProduct: ICartProduct
-    product: IProduct
+  cartProduct: ICartProduct
+  product: IProduct
 }
 
 const CartButtonProductsListItem: FC<CartButtonProductsListItemProps> = ({cartProduct, product}) => {
 
-    const [value, setValue] = useState(cartProduct.count);
-    const [isLoading, setIsLoading] = useState(false);
-    const dispatch = useAppDispatch();
-    const {isAuth, id} = useAppSelector(state => state.userReducer);
+  const [value, setValue] = useState(cartProduct.count);
+  const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useAppDispatch();
+  const {isAuth, id} = useAppSelector(state => state.userReducer);
 
-    const handleCount = async (count: number) => {
-        if(!isAuth || id === undefined) return;
-        if(count < 1) count = 1;
-        if(count > 99) count = 99;
-        if(count > value) {
-            setIsLoading(true);
-            await dispatch(addProductToCart(id, product.id, count-value));
-            setValue(count);
-            setIsLoading(false);
-        }
-        if(count < value) {
-            setIsLoading(true);
-            await dispatch(takeProductFromCart(id, product.id, value-count));
-            setValue(count);
-            setIsLoading(false);
-        }
+  const handleCount = async (count: number) => {
+    if (!isAuth || id === undefined) return;
+    if (count < 1) count = 1;
+    if (count > 99) count = 99;
+    if (count > value) {
+      setIsLoading(true);
+      await dispatch(addProductToCart(id, product.id, count - value));
+      setValue(count);
+      setIsLoading(false);
     }
-
-    const handleDelete = () => {
-        if(isAuth && id !== undefined)
-            dispatch(removeProductFromCart(id, product.id));
+    if (count < value) {
+      setIsLoading(true);
+      await dispatch(takeProductFromCart(id, product.id, value - count));
+      setValue(count);
+      setIsLoading(false);
     }
+  }
 
-    return (
-        <ProductItem
-            $isLoading={isLoading}
-            key={cartProduct.id}
-        >
-            <ProductItemImageWrapper>
-                <ProductItemImage src={process.env.REACT_APP_URL+product.img} alt={product.name} />
-            </ProductItemImageWrapper>
-            <ProductItemInfo>
-                <ProductItemNameLine>
-                    <ProductItemName>{product.name}</ProductItemName>
-                    <TrashCan
-                        onClick={handleDelete}
-                    />
-                </ProductItemNameLine>
-                <ProductItemWeight>{String(product.weight)} г</ProductItemWeight>
-                <ProductItemPriceOptionsBlock>
-                    <Counter
-                        isMini={true}
-                        value={value}
-                        setValue={handleCount}
-                    />
-                    <ProductItemPrice>{product.price * value} ₽</ProductItemPrice>
-                </ProductItemPriceOptionsBlock>
-            </ProductItemInfo>
-        </ProductItem>
-    );
+  const handleDelete = () => {
+    if (isAuth && id !== undefined)
+      dispatch(removeProductFromCart(id, product.id));
+  }
+
+  return (
+    <ProductItem
+      $isLoading={isLoading}
+      key={cartProduct.id}
+    >
+      <ProductItemImageWrapper>
+        <ProductItemImage src={process.env.REACT_APP_URL + product.img} alt={product.name}/>
+      </ProductItemImageWrapper>
+      <ProductItemInfo>
+        <ProductItemNameLine>
+          <ProductItemName>{product.name}</ProductItemName>
+          <TrashCan
+            onClick={handleDelete}
+          />
+        </ProductItemNameLine>
+        <ProductItemWeight>{String(product.weight)} г</ProductItemWeight>
+        <ProductItemPriceOptionsBlock>
+          <Counter
+            isMini={true}
+            value={value}
+            setValue={handleCount}
+          />
+          <ProductItemPrice>{product.price * value} ₽</ProductItemPrice>
+        </ProductItemPriceOptionsBlock>
+      </ProductItemInfo>
+    </ProductItem>
+  );
 };
 
 export default CartButtonProductsListItem;

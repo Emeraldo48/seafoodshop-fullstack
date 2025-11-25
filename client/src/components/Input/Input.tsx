@@ -16,19 +16,19 @@ const BaseTextInput = styled.input`
 `
 
 export const TextInput = styled(BaseTextInput).attrs({
-    type: "text"
+  type: "text"
 })`
 
 `
 
 export const EmailInput = styled(BaseTextInput).attrs({
-    type: "email"
+  type: "email"
 })`
     
 `
 
 export const NumberInput = styled(BaseTextInput).attrs({
-    type: "number"
+  type: "number"
 })`
     &::-webkit-outer-spin-button, &::-webkit-inner-spin-button {
         -webkit-appearance: none;
@@ -36,7 +36,7 @@ export const NumberInput = styled(BaseTextInput).attrs({
 `
 
 export const PasswordInput = styled(BaseTextInput).attrs({
-    type: "password"
+  type: "password"
 })`
 
 `
@@ -62,7 +62,7 @@ export const TextArea = styled.textarea`
 `
 
 export const FileInput = styled.input.attrs({
-    type: "file"
+  type: "file"
 })`
     opacity: 1;
     width: 100%;

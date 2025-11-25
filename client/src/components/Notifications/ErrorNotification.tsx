@@ -4,13 +4,13 @@ import {FaCircleXmark} from "react-icons/fa6";
 import {NotificationText, NotificationWrapper} from "./Notification";
 
 const Wrapper = styled(NotificationWrapper)<{
-    $isFade?: boolean
+  $isFade?: boolean
 }>`
     background-color: #d85959;
 `
 
 const Text = styled(NotificationText)`
-    
+
 `
 
 const ErrorIcon = styled(FaCircleXmark)`
@@ -18,18 +18,18 @@ const ErrorIcon = styled(FaCircleXmark)`
 `
 
 interface ErrorNotificationProps {
-    text: string
-    isFade: boolean
-    count: number
+  text: string
+  isFade: boolean
+  count: number
 }
 
 const ErrorNotification: FC<ErrorNotificationProps> = ({text, isFade}) => {
-    return (
-        <Wrapper $isFade={isFade}>
-            <ErrorIcon />
-            <Text>{text}</Text>
-        </Wrapper>
-    );
+  return (
+    <Wrapper $isFade={isFade}>
+      <ErrorIcon/>
+      <Text>{text}</Text>
+    </Wrapper>
+  );
 };
 
 export default ErrorNotification;

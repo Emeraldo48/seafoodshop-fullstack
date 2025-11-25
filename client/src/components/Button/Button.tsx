@@ -1,6 +1,6 @@
 import styled, {css} from "styled-components";
 
-export const Button = styled.button<{$unactive?: boolean}>`
+export const Button = styled.button<{ $unactive?: boolean }>`
     background-color: transparent;
     border: 1px solid var(--color-red);
     color: var(--color-red);

@@ -77,125 +77,124 @@ const BackButton = styled(Button)`
 
 const productsOnPage = 5;
 const ProductAdminPage = () => {
-    const [products, setProducts] = useState<IProduct[]>([]);
-    const [categories, setCategories] = useState<Record<string, ICategory>>({});
-    const [page, setPage] = useState<number>(0);
-    const [filteredProducts, setFilteredProducts] = useState<IProduct[]>([]);
-    const {data, loading, error, refetch} = useQuery(GET_ALL_PRODUCTS);
-    const {data: categoriesData, loading: categoriesLoading, error: categoriesError} = useQuery(GET_ALL_CATEGORIES);
-    const dispatch = useAppDispatch();
-    const navigate = useNavigate();
+  const [products, setProducts] = useState<IProduct[]>([]);
+  const [categories, setCategories] = useState<Record<string, ICategory>>({});
+  const [page, setPage] = useState<number>(0);
+  const [filteredProducts, setFilteredProducts] = useState<IProduct[]>([]);
+  const {data, loading, error, refetch} = useQuery(GET_ALL_PRODUCTS);
+  const {data: categoriesData, loading: categoriesLoading, error: categoriesError} = useQuery(GET_ALL_CATEGORIES);
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
-    useEffect(() => {
-        if(!loading && !categoriesLoading) {
-            setProducts(data.getProducts.products);
-            setCategories(categoriesData.getCategories.reduce((acc: Record<string, ICategory>, value: ICategory) => {
-                return {...acc, [value.id]: value};
-            }, {}));
+  useEffect(() => {
+    if (!loading && !categoriesLoading) {
+      setProducts(data.getProducts.products);
+      setCategories(categoriesData.getCategories.reduce((acc: Record<string, ICategory>, value: ICategory) => {
+        return {...acc, [value.id]: value};
+      }, {}));
+    }
+  }, [data, categoriesData]);
+
+  useEffect(() => {
+    if (!loading && !categoriesLoading) {
+      setFilteredProducts(products.slice(page * productsOnPage, (page + 1) * productsOnPage));
+    }
+  }, [page, products]);
+
+  const addHandler = () => {
+    dispatch(modalSlice.actions.setModalWindow({
+      Component: AddProductModal,
+      data: {
+        onAdd() {
+          refetch().then();
         }
-    }, [data, categoriesData]);
+      }
+    }));
+  }
 
-    useEffect(() => {
-        if(!loading && !categoriesLoading) {
-            setFilteredProducts(products.slice(page * productsOnPage, (page + 1) * productsOnPage));
+  const updateHandler = (product: IProduct) => {
+    dispatch(modalSlice.actions.setModalWindow({
+      Component: ChangeProductModal,
+      data: {
+        product,
+        onAdd() {
+          refetch().then();
         }
-    }, [page, products]);
+      }
+    }));
+  }
 
-    const addHandler = () => {
-        dispatch(modalSlice.actions.setModalWindow({
-            Component: AddProductModal,
-            data: {
-                onAdd() {
-                    refetch().then();
-                }
-            }
-        }));
-    }
+  const deleteHandler = (id: number) => {
+    dispatch(modalSlice.actions.setConfirmWindow({
+      onAccept() {
+        removeProduct(id).then(res => {
+          refetch().then();
+        })
+      },
+      onDecline() {
 
-    const updateHandler = (product: IProduct) => {
-        dispatch(modalSlice.actions.setModalWindow({
-            Component: ChangeProductModal,
-            data: {
-                product,
-                onAdd() {
-                    refetch().then();
-                }
-            }
-        }));
-    }
-
-    const deleteHandler = (id: number) => {
-        dispatch(modalSlice.actions.setConfirmWindow({
-            onAccept() {
-                removeProduct(id).then(res => {
-                    refetch().then();
-                })
-            },
-            onDecline() {
-
-            }
-        }));
-    }
+      }
+    }));
+  }
 
 
+  return (
+    <Wrapper>
+      <BackButton onClick={e => navigate('..')}>Назад</BackButton>
+      <Title>Продукты</Title>
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableNameCell>Номер</TableNameCell>
+            <TableNameCell>Имя Продукта</TableNameCell>
+            <TableNameCell>Цена</TableNameCell>
+            <TableNameCell>Категория</TableNameCell>
+            <TableNameCell>Вес</TableNameCell>
+            <TableNameCell>Доступно</TableNameCell>
+            <TableNameCell>
+              <TableActionsHandler>
+                <Button onClick={addHandler}>Добавить</Button>
+              </TableActionsHandler>
+            </TableNameCell>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {filteredProducts.map(product =>
+            <TableRow key={product.id}>
+              <TableCell>{product.id}</TableCell>
+              <TableCell>{product.name}</TableCell>
+              <TableCell>{product.price}</TableCell>
+              <TableCell>{categories[product.categoryId]?.name || "Не существует"}</TableCell>
+              <TableCell>{String(product.weight)}</TableCell>
+              <TableCell>{product.isAvailable}</TableCell>
+              <TableCell>
+                <TableActionsHandler>
+                  <FilledButton
+                    onClick={e => updateHandler(product)}
+                  >
+                    Изменить
+                  </FilledButton>
+                  <FilledButton
+                    onClick={e => deleteHandler(product.id)}
+                  >
+                    Удалить
+                  </FilledButton>
+                </TableActionsHandler>
 
-    return (
-        <Wrapper>
-            <BackButton onClick={e => navigate('..')}>Назад</BackButton>
-            <Title>Продукты</Title>
-            <Table>
-                <TableHeader>
-                    <TableRow>
-                        <TableNameCell>Номер</TableNameCell>
-                        <TableNameCell>Имя Продукта</TableNameCell>
-                        <TableNameCell>Цена</TableNameCell>
-                        <TableNameCell>Категория</TableNameCell>
-                        <TableNameCell>Вес</TableNameCell>
-                        <TableNameCell>Доступно</TableNameCell>
-                        <TableNameCell>
-                            <TableActionsHandler>
-                                <Button onClick={addHandler}>Добавить</Button>
-                            </TableActionsHandler>
-                        </TableNameCell>
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
-                    {filteredProducts.map(product =>
-                        <TableRow key={product.id}>
-                            <TableCell>{product.id}</TableCell>
-                            <TableCell>{product.name}</TableCell>
-                            <TableCell>{product.price}</TableCell>
-                            <TableCell>{categories[product.categoryId]?.name || "Не существует"}</TableCell>
-                            <TableCell>{String(product.weight)}</TableCell>
-                            <TableCell>{product.isAvailable}</TableCell>
-                            <TableCell>
-                                <TableActionsHandler>
-                                    <FilledButton
-                                        onClick={e => updateHandler(product)}
-                                    >
-                                        Изменить
-                                    </FilledButton>
-                                    <FilledButton
-                                        onClick={e => deleteHandler(product.id)}
-                                    >
-                                        Удалить
-                                    </FilledButton>
-                                </TableActionsHandler>
+              </TableCell>
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
+      {products.length > 0 && <Pagination
+        page={page}
+        onSetPage={(page: number) => setPage(page)}
+        elementsCount={products.length}
+        elementsPerPage={productsOnPage}
+      />}
 
-                            </TableCell>
-                        </TableRow>
-                    )}
-                </TableBody>
-            </Table>
-            {products.length > 0 && <Pagination
-                page={page}
-                onSetPage={(page: number) => setPage(page)}
-                elementsCount={products.length}
-                elementsPerPage={productsOnPage}
-            />}
-
-        </Wrapper>
-    );
+    </Wrapper>
+  );
 };
 
 export default ProductAdminPage;
