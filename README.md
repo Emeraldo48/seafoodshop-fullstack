@@ -123,13 +123,21 @@ npm start
 
 ## 📸 Screenshots
 
-- **Homepage** with custom swiper
-![Main page image](https://github.com/Emeraldo48/seafoodshop-fullstack/raw/master/screenshots/main-page.png)
-- **Cart**
-![Main page image](https://github.com/Emeraldo48/seafoodshop-fullstack/raw/master/screenshots/cart-page.png)
-![Main page image](https://github.com/Emeraldo48/seafoodshop-fullstack/raw/master/screenshots/cart-button-hover.png)
-- **Modal window**
-![Main page image](https://github.com/Emeraldo48/seafoodshop-fullstack/raw/master/screenshots/cart-button-hover.png)
+**Homepage** with custom swiper
+
+<img src="https://github.com/Emeraldo48/seafoodshop-fullstack/raw/master/screenshots/main-page.png" width="600">
+
+**Cart**
+
+<div>
+  <img src="https://github.com/Emeraldo48/seafoodshop-fullstack/raw/master/screenshots/cart-page.png" width="600">
+  <img src="https://github.com/Emeraldo48/seafoodshop-fullstack/raw/master/screenshots/cart-button-hover.png" width="200">
+  
+</div>
+
+**Modal window**
+
+<img src="https://github.com/Emeraldo48/seafoodshop-fullstack/raw/master/screenshots/modal.png" width="600">
 
 ## 🛠️ Development
 
