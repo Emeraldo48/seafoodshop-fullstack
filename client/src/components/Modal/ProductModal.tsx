@@ -101,7 +101,8 @@ const ProductModal: FC = () => {
                 id: Date.now(),
                 type: NotificationType.WARNING,
                 duration: 3000,
-                message: "Вы не авторизованы"
+                message: "Вы не авторизованы",
+                count: 1
             }))
         }
     }

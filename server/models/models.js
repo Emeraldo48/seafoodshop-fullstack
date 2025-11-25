@@ -20,6 +20,7 @@ const CartProduct = sequelize.define('cart_product', {
 const Product = sequelize.define('product', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
     name: {type: DataTypes.STRING, unique: true, allowNull: false},
+    slug: {type: DataTypes.STRING, unique: true, allowNull: true},
     price: {type: DataTypes.INTEGER, allowNull: false},
     weight: {type: DataTypes.INTEGER},
     description: {type: DataTypes.STRING},
@@ -30,7 +31,8 @@ const Product = sequelize.define('product', {
 
 const Category = sequelize.define('category', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
-    name: {type: DataTypes.STRING, unique: true, allowNull: false}
+    name: {type: DataTypes.STRING, unique: true, allowNull: false},
+    slug: {type: DataTypes.STRING, unique: true, allowNull: true},
 })
 
 User.hasOne(Cart);

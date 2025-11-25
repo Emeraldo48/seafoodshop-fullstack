@@ -1,7 +1,6 @@
 import React from 'react';
-import {useAppDispatch, useAppSelector} from "../../hooks/redux";
+import {useAppSelector} from "../../hooks/redux";
 import {ModalState} from "../../store/reducers/modalSlice";
-import AuthModal from "./AuthModal";
 import Modal from "./Modal";
 
 const ModalController = () => {

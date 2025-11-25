@@ -1,5 +1,6 @@
 const ApiError = require('../error/ApiError');
 const {Category} = require('../models/models');
+const toTranslit = require('../utils/toTranslit');
 
 class CategoryController {
     async create(req, res, next) {
@@ -9,7 +10,7 @@ class CategoryController {
             if(checkCategory) {
                 return next(ApiError.badRequest('Категория с таким именем уже существует'))
             }
-            const category = await Category.create({name});
+            const category = await Category.create({name, slug: toTranslit(name)});
             return res.json(category);
         } catch(e) {
             next(ApiError.badRequest(e.message));

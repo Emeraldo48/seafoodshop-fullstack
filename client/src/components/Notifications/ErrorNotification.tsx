@@ -20,6 +20,7 @@ const ErrorIcon = styled(FaCircleXmark)`
 interface ErrorNotificationProps {
     text: string
     isFade: boolean
+    count: number
 }
 
 const ErrorNotification: FC<ErrorNotificationProps> = ({text, isFade}) => {

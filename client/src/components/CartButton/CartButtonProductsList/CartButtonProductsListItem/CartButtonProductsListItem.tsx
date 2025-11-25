@@ -135,7 +135,7 @@ const CartButtonProductsListItem: FC<CartButtonProductsListItemProps> = ({cartPr
                         value={value}
                         setValue={handleCount}
                     />
-                    <ProductItemPrice>{product.price * value} ₽.</ProductItemPrice>
+                    <ProductItemPrice>{product.price * value} ₽</ProductItemPrice>
                 </ProductItemPriceOptionsBlock>
             </ProductItemInfo>
         </ProductItem>

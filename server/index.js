@@ -1,5 +1,7 @@
 require('dotenv').config();
 require('./models/models');
+const {Product, Category} = require('./models/models');
+const translit = require('./utils/toTranslit');
 
 const express = require('express');
 const {json} = require("express");
@@ -37,6 +39,21 @@ const start = async() => { // Асинхронный
     try {
         await sequelize.authenticate();
         await sequelize.sync();
+
+        await Product.findAll({where: {slug: null}}).then(res => {
+            res.forEach(async (model) => {
+                model.slug = translit(model.name);
+                await model.save();
+            })
+        });
+
+        await Category.findAll({where: {slug: null}}).then(res => {
+            res.forEach(async (model) => {
+                model.slug = translit(model.name);
+                await model.save();
+            })
+        });
+
         app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
     } catch (e) {
 

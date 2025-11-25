@@ -14,10 +14,12 @@ const Wrapper = styled.div`
 const ListWrapper = styled.div`
     padding: 20px 0 10px;
     max-height: 400px;
+    height: 358px;
     overflow-y: scroll;
     overflow-x: hidden;
     margin-right: 2px;
     scroll-behavior: smooth;
+    overscroll-behavior: contain;
     
     &::-webkit-scrollbar {
         width: 5px;
@@ -76,7 +78,7 @@ const CartButtonProductsList = () => {
             </ListWrapper>
             <TotalPrice>
                 <span>Итого:</span>
-                <span>{calculateTotalPrice} ₽.</span>
+                <span>{calculateTotalPrice} ₽</span>
             </TotalPrice>
         </Wrapper>
     );

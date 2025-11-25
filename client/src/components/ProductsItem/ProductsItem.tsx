@@ -1,4 +1,4 @@
-import React, {FC} from 'react';
+import React, {FC, memo} from 'react';
 import styled from "styled-components";
 import {IProduct} from "../../types/Product";
 import {Button} from "../Button/Button";
@@ -79,7 +79,7 @@ interface ProductsItemProps {
     cartProduct?: ICartProduct
 }
 
-const ProductsItem: FC<ProductsItemProps> = ({card, handleProductClick, handleButtonClick, cartProduct}) => {
+const ProductsItem: FC<ProductsItemProps> = memo(({card, handleProductClick, handleButtonClick, cartProduct}) => {
 
     const dispatch = useAppDispatch();
     const {isAuth, id} = useAppSelector(state => state.userReducer);
@@ -121,6 +121,10 @@ const ProductsItem: FC<ProductsItemProps> = ({card, handleProductClick, handleBu
             </BuyLine>
         </Wrapper>
     );
-};
+}, areEqual);
+
+function areEqual(prevProps: ProductsItemProps, nextProps: ProductsItemProps) {
+    return prevProps.cartProduct?.count === nextProps.cartProduct?.count;
+}
 
 export default ProductsItem;

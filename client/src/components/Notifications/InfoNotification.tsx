@@ -20,6 +20,7 @@ const InfoIcon = styled(FaCircleInfo)`
 interface InfoNotificationProps {
     text: string
     isFade: boolean
+    count: number
 }
 
 const InfoNotification: FC<InfoNotificationProps> = ({text, isFade}) => {

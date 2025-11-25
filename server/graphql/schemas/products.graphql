@@ -1,6 +1,7 @@
 type Product {
     id: ID
     name: String
+    slug: String
     price: Int
     weight: Int
     description: String

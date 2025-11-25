@@ -12,4 +12,5 @@ export interface INotification {
     type: NotificationType
     message: string
     duration: number
+    count: number
 }

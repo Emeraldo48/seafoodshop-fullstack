@@ -1,11 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import styled from "styled-components";
+import styled, {css} from "styled-components";
 import {Container} from "../Container";
 import {useQuery} from "@apollo/client";
 import {GET_ALL_CATEGORIES} from "../../graphql/query/category";
 import {ICategory} from "../../types/Category";
 import {FilledButton} from "../Button/Button";
 import CartButton from "../CartButton/CartButton";
+import {useParams} from "react-router-dom";
 
 const Wrapper = styled.div`
     width: 100%;
@@ -41,7 +42,7 @@ const CategoriesHandler = styled.div`
     flex: 1;
 `
 
-const CategoryItem = styled.button`
+const CategoryItem = styled.button<{$active: boolean}>`
     margin: 4px 0;
     padding: 10px 10px 10px 0;
     color: var(--color-text-primary);
@@ -51,6 +52,11 @@ const CategoryItem = styled.button`
     transition: color 0.5s ease;
     cursor: pointer;
     font-weight: var(--fw-bold);
+    
+    ${props => props.$active && css`
+        color: var(--color-red);
+        pointer-events: none;
+    `}
     
     &:hover {
         color: var(--color-red);
@@ -69,12 +75,17 @@ const CategoryNavigation = () => {
     }, [data]);
 
     const handleNavigation = (categoryName: string) => {
-        const category = document.querySelector(`[data-anchor-id=${categoryName.replaceAll(" ", "-")}]`);
-        if(category)
+        const category = document.querySelector(`[data-anchor-id=${categoryName}]`);
+        if(category) {
             category.scrollIntoView({
                 behavior: "smooth",
                 block: "start"
-            })
+            });
+            window.history.pushState(null, "", `/${categoryName}`);
+            console.log();
+
+        }
+
     }
 
     return (
@@ -84,7 +95,8 @@ const CategoryNavigation = () => {
                     <CategoriesHandler>
                         {categories.map(category =>
                             <CategoryItem
-                                onClick={e => handleNavigation(category.name)}
+                                $active={false}
+                                onClick={e => handleNavigation(category.slug)}
                                 key={category.id}
                             >
                                 {category.name}

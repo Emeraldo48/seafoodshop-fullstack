@@ -64,7 +64,8 @@ const CartPage = () => {
                 id: Date.now(),
                 type: NotificationType.WARNING,
                 duration: 3000,
-                message: "Вы не авторизованы"
+                message: "Вы не авторизованы",
+                count: 1
             }));
             return;
         }
@@ -74,7 +75,8 @@ const CartPage = () => {
                     id: Date.now(),
                     type: NotificationType.SUCCESS,
                     duration: 3000,
-                    message: "Успешная покупка!"
+                    message: "Успешная покупка!",
+                    count: 1
                 }))
             })
             .then(() => {
@@ -88,7 +90,8 @@ const CartPage = () => {
                 id: Date.now(),
                 type: NotificationType.WARNING,
                 duration: 3000,
-                message: "Вы не авторизованы"
+                message: "Вы не авторизованы",
+                count: 1
             }));
             return;
         }
@@ -101,7 +104,8 @@ const CartPage = () => {
                 id: Date.now(),
                 type: NotificationType.WARNING,
                 duration: 3000,
-                message: "Вы не авторизованы"
+                message: "Вы не авторизованы",
+                count: 1
             }));
             return;
         }
@@ -110,7 +114,8 @@ const CartPage = () => {
                 id: Date.now(),
                 type: NotificationType.INFO,
                 duration: 3000,
-                message: "Корзина очищена!"
+                message: "Корзина очищена!",
+                count: 1
             }));
         });
     }

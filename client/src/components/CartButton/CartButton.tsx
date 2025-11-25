@@ -5,7 +5,7 @@ import {useAppDispatch, useAppSelector} from "../../hooks/redux";
 import {getCartProducts} from "../../store/reducers/ActionCreators";
 import EmptyCartComponent from "../EmptyCartComponent/EmptyCartComponent";
 import {FaCaretUp} from "react-icons/fa6";
-import {fadeAnimation, showAnimation} from "../../utils/animations/modalAnimations";
+import {fadeAnimation, showAnimation} from "../../utils/animations/animations";
 import CartButtonProductsList from "./CartButtonProductsList/CartButtonProductsList";
 import {useNavigate} from "react-router-dom";
 import {CART_ROUTE} from "../../types/consts";
@@ -48,9 +48,13 @@ const HoverContent = styled.div`
     position: relative;
     width: 100%;
     min-height: 354px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     background-color: var(--color-white);
     border-radius: 10px;
-    filter: drop-shadow(0 1px 6px rgba(0,0,0,0.2))
+    filter: drop-shadow(0 1px 6px rgba(0,0,0,0.2));
 `
 
 const CaretUp = styled(FaCaretUp)`
@@ -96,7 +100,8 @@ const CartButton = () => {
                     id: Date.now(),
                     type: NotificationType.WARNING,
                     duration: 3000,
-                    message: "У вас пустая корзина"
+                    message: "У вас пустая корзина",
+                    count: 1
                 }));
                 return;
             }
@@ -106,7 +111,8 @@ const CartButton = () => {
                 id: Date.now(),
                 type: NotificationType.WARNING,
                 duration: 3000,
-                message: "Вы не авторизованы"
+                message: "Вы не авторизованы",
+                count: 1
             }))
         }
     }
@@ -124,7 +130,7 @@ const CartButton = () => {
             <FilledButton
                 onClick={handleCartButtonClick}
             >
-                {products.length > 0 ? `Корзина (${products.length})` : "Корзина"}
+                {products.length > 0 ? `Корзина (${products.reduce((acc, value) => acc + value.count, 0)})` : "Корзина"}
             </FilledButton>
             {isActive && <HoverWindow $isFade={isFade}>
                 <HoverContent>

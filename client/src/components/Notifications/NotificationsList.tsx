@@ -46,19 +46,38 @@ const NotificationsList = () => {
                 notifications.map((notification, id) => {
                     switch (notification.type) {
                         case NotificationType.SUCCESS: {
-                            return <SuccessNotification key={id} text={notification.message} isFade={notification.duration <= 300} />
+                            return <SuccessNotification
+                                key={id}
+                                text={notification.message}
+                                isFade={notification.duration <= 300}
+                                count={notification.count}
+                            />
                         }
                         case NotificationType.INFO: {
-                            return <InfoNotification key={id} text={notification.message} isFade={notification.duration <= 300} />
+                            return <InfoNotification
+                                key={id}
+                                text={notification.message}
+                                isFade={notification.duration <= 300}
+                                count={notification.count}
+                            />
                         }
                         case NotificationType.WARNING: {
-                            return <WarningNotification key={id} text={notification.message} isFade={notification.duration <= 300} />
+                            return <WarningNotification
+                                key={id} text={notification.message}
+                                isFade={notification.duration <= 300}
+                                count={notification.count}
+                            />
                         }
                         case NotificationType.ERROR: {
-                            return <ErrorNotification key={id} text={notification.message} isFade={notification.duration <= 300} />
+                            return <ErrorNotification
+                                key={id}
+                                text={notification.message}
+                                isFade={notification.duration <= 300}
+                                count={notification.count}
+                            />
                         }
                         default: {
-                            return <ErrorNotification key={id} text={notification.message} isFade={notification.duration <= 300} />
+                            return <ErrorNotification key={id} text={notification.message} isFade={notification.duration <= 300} count={notification.count}/>
                         }
                     }
                 })
