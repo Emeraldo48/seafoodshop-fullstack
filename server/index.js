@@ -1,7 +1,7 @@
 require('dotenv').config();
 require('./models/models');
 const {Product, Category} = require('./models/models');
-const translit = require('./utils/index');
+const translit = require('./utils/toTranslit');
 
 const express = require('express');
 const {json} = require("express");

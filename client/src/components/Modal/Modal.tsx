@@ -3,10 +3,8 @@ import styled, {css} from "styled-components";
 import {FaXmark} from "react-icons/fa6";
 import {
     fadeAnimation,
-    fadeContentAnimation,
-    showAnimation,
-    showContentAnimation
-} from "../../utils/animations/modalAnimations";
+    showAnimation
+} from "../../utils/animations/animations";
 import {useAppDispatch, useAppSelector} from "../../hooks/redux";
 import {modalSlice, ModalState} from "../../store/reducers/modalSlice";
 
@@ -41,11 +39,11 @@ const ContentWrapper = styled.div<{
     padding: 40px;
     background-color: var(--color-white);
     border-radius: 20px;
-    animation: ${showContentAnimation} 0.2s linear;
+    animation: ${showAnimation} 0.2s linear;
     margin: auto 0;
 
     ${props => props.$fading && css`
-        animation: ${fadeContentAnimation} 0.2s linear;
+        animation: ${fadeAnimation} 0.2s linear;
         opacity: 0;
         transform: scale(0.8);
     `}

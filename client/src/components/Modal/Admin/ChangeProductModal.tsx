@@ -11,7 +11,7 @@ import CustomSelect from "../../Select/CustomSelect";
 import {updateProduct} from "../../../http/productAPI";
 
 const Form = styled.form`
-    width: 300px;
+    width: 500px;
     display: flex;
     flex-direction: column;
     row-gap: 20px;

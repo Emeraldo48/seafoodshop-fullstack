@@ -14,6 +14,10 @@ export const notificationSlice = createSlice({
     initialState,
     reducers: {
         addNotification: (state, action: PayloadAction<INotification>) => {
+            const finded = state.notifications.find(el => action.payload.message === action.payload.message);
+            if(finded)
+                finded.duration = action.payload.duration
+            else
             state.notifications.unshift(action.payload)
         },
         removeNotification: (state, action: PayloadAction<number>) => {

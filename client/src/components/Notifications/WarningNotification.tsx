@@ -20,6 +20,7 @@ const WarningIcon = styled(FaTriangleExclamation)`
 interface WarningNotificationProps {
     text: string
     isFade: boolean
+    count: number
 }
 
 const WarningNotification: FC<WarningNotificationProps> = ({text, isFade}) => {

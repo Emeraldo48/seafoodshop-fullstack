@@ -21,7 +21,7 @@ export const tryToLogin = (email: String, password: String) => async (dispatch: 
         dispatch(userSlice.actions.userLoginSuccess(decode));
     } catch (e) {
         dispatch(userSlice.actions.userLoginError(getErrorMessage(e)));
-        dispatch(notificationSlice.actions.addNotification({id: Date.now(), type: NotificationType.ERROR, duration: 3000, message: "Ошибка авторизации"}))
+        dispatch(notificationSlice.actions.addNotification({id: Date.now(), type: NotificationType.ERROR, duration: 3000, message: "Ошибка авторизации", count: 1}))
     }
 }
 
@@ -42,7 +42,7 @@ export const registration = (email: String, password: String) => async (dispatch
         dispatch(userSlice.actions.userLoginSuccess(decode));
     } catch (e) {
         dispatch(userSlice.actions.userLoginError(getErrorMessage(e)));
-        dispatch(notificationSlice.actions.addNotification({id: Date.now(), type: NotificationType.ERROR, duration: 3000, message: "Ошибка регистрации"}))
+        dispatch(notificationSlice.actions.addNotification({id: Date.now(), type: NotificationType.ERROR, duration: 3000, message: "Ошибка регистрации", count: 1}))
     }
 }
 
@@ -93,7 +93,8 @@ export const removeProductFromCart = (userId: number, productId: number) => asyn
             id: Date.now(),
             type: NotificationType.INFO,
             duration: 3000,
-            message: "Продукт удалён из корзины"
+            message: "Продукт удалён из корзины",
+            count: 1
         }));
     } catch (e) {
         dispatch(cartSlice.actions.cartLoadingError(getErrorMessage(e)))

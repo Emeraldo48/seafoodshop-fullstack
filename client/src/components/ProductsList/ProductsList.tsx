@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {memo, useCallback, useEffect, useRef, useState} from 'react';
 import styled from "styled-components";
 import {useQuery} from "@apollo/client";
 import {GET_ALL_CATEGORIES} from "../../graphql/query/category";
@@ -16,7 +16,7 @@ import {NotificationType} from "../../types/INotification";
 import ProductsSection from "../ProductsSection/ProductsSection";
 
 const Wrapper = styled.main`
-    
+    min-height: 600px;
 `
 
 const ErrorWrapper = styled.div`
@@ -73,7 +73,8 @@ const ProductsList = () => {
                 id: Date.now(),
                 type: NotificationType.WARNING,
                 duration: 3000,
-                message: "Вы не авторизованы"
+                message: "Вы не авторизованы",
+                count: 1
             }))
             return;
         }
@@ -84,6 +85,7 @@ const ProductsList = () => {
             type: NotificationType.SUCCESS,
             message: "Товар добавлен в корзину",
             duration: 3000,
+            count: 1
         }))
     }, [id, dispatch]);
 

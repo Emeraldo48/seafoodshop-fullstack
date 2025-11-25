@@ -40,14 +40,13 @@ function App() {
 
     return (
         <AppWrapper>
-            <Header/>
-            <title>Мой сайт</title>
+            <Header />
             <Main>
                 <Routes>
                     <Route path={`${ADMIN_ROUTE}/*`} element={<AdminRouter/>} />
                     <Route path={`${CART_ROUTE}/*`} element={<CartPage/>} />
-                    <Route path={SHOP_ROUTE} index element={<MainPage/>} />
                     {categories.map(category => <Route key={category.id} path={`${SHOP_ROUTE}${category.slug}/*`} element={<MainPage/>} />)}
+                    <Route path={`${SHOP_ROUTE}*`} index element={<MainPage/>} />
                     <Route path="*" element={<PageNotFound />} />
                 </Routes>
             </Main>

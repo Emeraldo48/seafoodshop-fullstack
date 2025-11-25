@@ -67,11 +67,11 @@ const ProductsSection: FC<ProductsSectionProps> = ({productsCategory, handleProd
             <ProductsWrapper>
                 {productsCategory.products.map(product => {
                         return <ProductsItem
+                            key={product.slug}
                             handleButtonClick={handleButtonClick}
                             handleProductClick={() => handleProductClick(product, productsCategory.category)}
-                            key={product.slug}
                             card={product}
-                            cartProduct={cartProducts.find(cartProduct => cartProduct.productId === product.id)}
+                            cartProduct={cartProducts.find(cartProduct => cartProduct.productId == product.id)}
                         />
                     }
                 )}

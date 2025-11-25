@@ -3,6 +3,7 @@ const ApiError = require("../error/ApiError");
 const uuid = require('uuid');
 const path = require('path');
 const fs = require('fs');
+const toTranslit = require('../utils/toTranslit');
 
 class ProductController {
 
@@ -20,7 +21,7 @@ class ProductController {
             const {img} = req.files;
             let fileName = uuid.v4() + ".webp";
             await img.mv(path.resolve(__dirname, '..', 'static', fileName));
-            const product = await Product.create({name, price, weight, description, discount, isAvailable, categoryId, img: fileName});
+            const product = await Product.create({name, price, weight, description, discount, isAvailable, categoryId, img: fileName, slug: toTranslit(name)});
 
             return res.json(product);
         } catch (e) {

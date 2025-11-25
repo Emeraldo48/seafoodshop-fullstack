@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import styled from "styled-components";
+import styled, {css} from "styled-components";
 import {Container} from "../Container";
 import {useQuery} from "@apollo/client";
 import {GET_ALL_CATEGORIES} from "../../graphql/query/category";
@@ -42,7 +42,7 @@ const CategoriesHandler = styled.div`
     flex: 1;
 `
 
-const CategoryItem = styled.button`
+const CategoryItem = styled.button<{$active: boolean}>`
     margin: 4px 0;
     padding: 10px 10px 10px 0;
     color: var(--color-text-primary);
@@ -52,6 +52,11 @@ const CategoryItem = styled.button`
     transition: color 0.5s ease;
     cursor: pointer;
     font-weight: var(--fw-bold);
+    
+    ${props => props.$active && css`
+        color: var(--color-red);
+        pointer-events: none;
+    `}
     
     &:hover {
         color: var(--color-red);
@@ -77,6 +82,7 @@ const CategoryNavigation = () => {
                 block: "start"
             });
             window.history.pushState(null, "", `/${categoryName}`);
+            console.log();
 
         }
 
@@ -89,6 +95,7 @@ const CategoryNavigation = () => {
                     <CategoriesHandler>
                         {categories.map(category =>
                             <CategoryItem
+                                $active={false}
                                 onClick={e => handleNavigation(category.slug)}
                                 key={category.id}
                             >

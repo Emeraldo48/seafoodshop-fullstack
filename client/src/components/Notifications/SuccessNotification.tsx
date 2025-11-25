@@ -20,10 +20,10 @@ const SuccessIcon = styled(FaCircleCheck)`
 interface SuccessNotificationProps {
     text: string
     isFade: boolean
+    count: number
 }
 
 const SuccessNotification: FC<SuccessNotificationProps> = ({text, isFade}) => {
-    console.log('rerender')
     return (
         <Wrapper $isFade={isFade}>
             <SuccessIcon />
